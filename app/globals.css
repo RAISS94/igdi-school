@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Define the school's theme variables using Tailwind v4 syntax */
+/* 1. Define the School's Design System */
 @theme {
   --color-school-blue: #2a5298;
   --color-school-gold: #d4af37;
@@ -11,31 +11,32 @@
   --font-noto: var(--font-noto);
 }
 
+/* 2. Base Configuration */
 :root {
   --background: #ffffff;
   --foreground: #1a2a44;
 }
 
-/* Base Body Styles */
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: var(--font-noto), sans-serif;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Prevents scrollbar jumping during animations */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* RTL Support for Arabic Typography */
+/* 3. RTL (Arabic) Specific Typography Tweaks */
 [dir="rtl"] {
   text-align: right;
 }
 
+/* Arabic font needs slightly more line-height to look elegant */
 [dir="rtl"] .font-amiri {
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
-/* Smooth Transitions for Dark Mode */
+/* 4. Global Transition Settings (Smooth Dark Mode) */
 .transition-colors {
   transition-property:
     color, background-color, border-color, text-decoration-color, fill, stroke;
@@ -43,7 +44,50 @@ body {
   transition-duration: 300ms;
 }
 
-/* Custom button glow for the school-gold theme */
+/* 5. Custom "Premium" Animations & Effects */
+
+/* The Cinematic Hero Zoom */
+@keyframes slow-zoom {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.animate-slow-zoom {
+  animation: slow-zoom 20s infinite alternate ease-in-out;
+}
+
+/* Gold Glow for Premium Buttons */
 .btn-gold-glow {
   box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.btn-gold-glow:hover {
+  box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
+}
+
+/* Custom Scrollbar for a polished look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37; /* Gold scrollbar */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b5952f;
 }

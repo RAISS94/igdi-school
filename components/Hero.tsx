@@ -1,61 +1,63 @@
-// components/Hero.tsx
 "use client";
 import Image from "next/image";
+import Link from "next/link"; // Import Link
 import { useLanguage } from "../context/LanguageContext";
+import { ArrowDown } from "lucide-react";
 
 export default function Hero() {
   const { language } = useLanguage();
 
-  // Translation Object for Hero
   const t = {
-    verse: "وَقُل رَّبِّ زِدْنِي عِلْمًا", // Always Arabic
+    verse: "وَقُل رَّبِّ زِدْنِي عِلْمًا",
     welcome:
-      language === "ar"
-        ? "مرحبا بكم في مدرسة إيكضي العتيقة"
-        : "Welcome to the Traditional School of IGDI",
+      language === "ar" ? "مدرسة ايكضي العتيقة" : "Traditional School of IGDI",
     subWelcome:
       language === "ar"
-        ? "أصالة التعليم وعمق المعرفة"
-        : "Authenticity of Education and Depth of Knowledge",
-    historyBtn: language === "ar" ? "تاريخنا" : "Our History",
-    onlineBtn: language === "ar" ? "المدرسة الرقمية" : "Online School",
+        ? "حيث تلتقي أصالة التراث بآفاق المستقبل"
+        : "Where Heritage Meets the Future",
+    cta: language === "ar" ? "اكتشف تاريخنا" : "Discover Our Legacy",
   };
 
   return (
-    <section className="relative h-screen w-full flex items-center justify-center bg-school-blue">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
+    <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+      {/* Background with Slow Zoom Effect */}
+      <div className="absolute inset-0 z-0 animate-slow-zoom">
         <Image
-          src="/igdi-hero.jpeg"
-          alt="Ecole Traditionnelle IGDI"
+          src="/igdi-hero.png"
+          alt="Ecole Traditionnelle IGDI - Historical Building" // SEO: Descriptive Alt
           fill
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/50 dark:bg-school-dark/70 transition-colors duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-school-dark/90" />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-5xl">
-        <h2 className="font-amiri text-5xl md:text-8xl text-school-gold mb-8 drop-shadow-lg leading-tight">
+      <div className="relative z-10 text-center px-6 max-w-5xl flex flex-col items-center">
+        <h2 className="font-amiri text-5xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-b from-school-gold to-yellow-600 mb-8 drop-shadow-2xl leading-tight py-2">
           "{t.verse}"
         </h2>
 
-        <div className="text-white text-xl md:text-3xl font-light mb-12 font-noto space-y-2">
-          <p>{t.welcome}</p>
-          <p className="opacity-90 text-lg md:text-2xl text-school-sand">
+        <div className="space-y-4 mb-12">
+          {/* SEO: H1 is crucial for the homepage */}
+          <h1 className="text-white text-3xl md:text-5xl font-bold tracking-wide font-amiri">
+            {t.welcome}
+          </h1>
+          <p className="text-school-sand/80 text-lg md:text-xl font-light tracking-wider font-noto">
             {t.subWelcome}
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <button className="bg-school-gold hover:bg-yellow-600 text-school-dark font-bold py-4 px-12 rounded-full transition-all shadow-xl hover:scale-105 active:scale-95 text-lg">
-            {t.historyBtn}
+        {/* Updated Button with Link */}
+        <Link href="/history">
+          <button className="group relative px-10 py-4 bg-transparent border border-school-gold text-school-gold font-bold tracking-widest uppercase overflow-hidden rounded-sm transition-all hover:text-school-dark">
+            <span className="absolute inset-0 w-0 bg-school-gold transition-all duration-300 ease-out group-hover:w-full"></span>
+            <span className="relative flex items-center gap-3">
+              {t.cta}
+              <ArrowDown className="animate-bounce" size={18} />
+            </span>
           </button>
-          <button className="bg-transparent border-2 border-white hover:bg-white hover:text-school-blue text-white font-bold py-4 px-12 rounded-full transition-all text-lg">
-            {t.onlineBtn}
-          </button>
-        </div>
+        </Link>
       </div>
     </section>
   );
