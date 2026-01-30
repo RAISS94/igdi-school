@@ -1,14 +1,20 @@
 import "./globals.css";
-import Navbar from "../components/Navbar";
-// Removed ContactSection from here
-import Footer from "../components/Footer";
-import { LanguageProvider } from "../context/LanguageContext";
-import { Amiri, Noto_Sans_Arabic } from "next/font/google";
+// 1. Remove Navbar/Footer/LanguageProvider imports from here
+// 2. Import the new wrapper instead
+import ClientLayout from "../components/ClientLayout";
+import { Amiri, Noto_Sans_Arabic, Harmattan } from "next/font/google";
+
+const harmattan = Harmattan({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+  display: "swap",
+});
 
 const amiri = Amiri({
   subsets: ["arabic"],
   weight: ["400", "700"],
-  variable: "--font-amiri",
+  variable: "--font-secondary",
   display: "swap",
 });
 
@@ -37,19 +43,11 @@ export default function RootLayout({
       lang="ar"
       dir="rtl"
       suppressHydrationWarning
-      className={`${amiri.variable} ${noto.variable}`}
+      className={`${harmattan.variable} ${noto.variable}`}
     >
       <body className="antialiased font-noto bg-white text-school-dark">
-        <LanguageProvider>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <div className="z-10 relative">
-              {/* ContactSection removed from here */}
-              <Footer />
-            </div>
-          </div>
-        </LanguageProvider>
+        {/* Use the new ClientLayout wrapper here */}
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );

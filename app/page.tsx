@@ -1,19 +1,38 @@
-import Hero from "../components/Hero";
-import NewsSection from "../components/NewsSection";
-import LibrarySection from "../components/LibrarySection";
-import TeachersSection from "../components/TeachersSection";
-import DonateSection from "../components/DonateSection";
-import ContactSection from "../components/ContactSection"; // Added back
+import { PrismaClient } from "@prisma/client";
 
-export default function Home() {
+// FIX: Use "../" to go up out of the 'app' folder to find 'components'
+import Hero from "../components/Hero";
+import TeachersSection from "../components/TeachersSection";
+import CoursesSection from "../components/CoursesSection";
+import LibrarySection from "../components/LibrarySection";
+import NewsletterDonateSection from "../components/NewsletterDonateSection";
+
+const prisma = new PrismaClient();
+
+export default async function Home() {
+  const recentCourses = await prisma.course.findMany({
+    take: 3,
+    orderBy: { createdAt: "desc" },
+  });
+
+  // Fetch 4 Newest Books for the Library Section
+  const recentBooks = await prisma.book.findMany({
+    take: 4,
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
-    <div className="flex flex-col w-full overflow-hidden">
+    <main>
       <Hero />
-      <NewsSection />
-      <LibrarySection />
       <TeachersSection />
-      <DonateSection />
-      <ContactSection />
-    </div>
+
+      {/* Pass Real Data */}
+      <CoursesSection courses={recentCourses} />
+
+      {/* Pass Real Books */}
+      <LibrarySection books={recentBooks} />
+
+      <NewsletterDonateSection />
+    </main>
   );
 }

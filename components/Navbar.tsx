@@ -2,26 +2,18 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "../context/LanguageContext";
-import { Menu, Globe, ChevronRight, LogOut } from "lucide-react";
+import { Menu, Globe, LogOut, GraduationCap } from "lucide-react";
 
 export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
   const { language, toggleLanguage } = useLanguage();
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const isHomePage = pathname === "/";
-  const showSolidNavbar = isScrolled || !isHomePage;
 
   useEffect(() => {
     setMounted(true);
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   if (!mounted) return null;
@@ -30,141 +22,86 @@ export default function Navbar() {
     home: language === "ar" ? "الرئيسية" : "Home",
     news: language === "ar" ? "أخبار" : "News",
     library: language === "ar" ? "المكتبة" : "Library",
+    courses: language === "ar" ? "الدروس" : "Courses",
     scholars: language === "ar" ? "شيوخنا" : "Scholars",
     contact: language === "ar" ? "تواصل معنا" : "Contact",
-    donate: language === "ar" ? "تبرع" : "Donate",
-    langCode: language === "ar" ? "EN" : "AR",
+    register: language === "ar" ? "التسجيل" : "Register",
     schoolName: language === "ar" ? "مدرسة ايكضي" : "IGDI School",
-    schoolSubtitle:
-      language === "ar"
-        ? "المدرسة العتيقة إيكضي"
-        : "Traditional School of Igdi",
-    closeMenu: language === "ar" ? "إغلاق القائمة" : "Close Menu",
+    subtitle: language === "ar" ? "المدرسة العتيقة" : "Traditional School",
+    langCode: language === "ar" ? "EN" : "AR",
+    closeMenu: language === "ar" ? "إغلاق" : "Close",
   };
 
   const navLinks = [
     { name: t.home, href: "/" },
-    { name: t.news, href: "/blog" },
+    { name: t.courses, href: "/courses" },
     { name: t.library, href: "/library" },
     { name: t.scholars, href: "/scholars" },
-    { name: t.contact, href: "/contact" }, // <--- CHANGED THIS LINK
+    { name: t.contact, href: "/contact" },
   ];
-
-  const handleLinkClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string,
-  ) => {
-    setIsMobileMenuOpen(false);
-    // Removed the scroll logic for contact since it's now a real page
-    if (href === "/" && pathname === "/") {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
-  // Styles
-  const textColor = showSolidNavbar ? "text-school-dark" : "text-white";
-  const borderColor = showSolidNavbar
-    ? "border-school-dark/20"
-    : "border-white/30";
-  const navBackground = showSolidNavbar
-    ? "bg-white/95 backdrop-blur-md border-school-gold/30 shadow-lg py-2"
-    : "bg-transparent border-transparent py-4";
-
-  const logoSize = showSolidNavbar ? "w-12 h-12" : "w-16 h-16";
-  const titleSize = showSolidNavbar ? "text-xl" : "text-2xl";
-  const subtitleColor = showSolidNavbar
-    ? "text-school-gold"
-    : "text-school-sand";
 
   return (
     <>
-      <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ease-out border-b ${navBackground}`}
-      >
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          {/* LOGO */}
-          <Link
-            href="/"
-            onClick={(e) => handleLinkClick(e, "/")}
-            className="flex items-center gap-3 group z-50 relative"
-          >
-            <div
-              className={`relative bg-white rounded-full flex items-center justify-center shadow-lg overflow-hidden transition-all duration-500 ${logoSize}`}
-            >
+      {/* 1. SOLID DARK BACKGROUND - Always Visible */}
+      <nav className="fixed top-0 w-full z-50 bg-school-dark border-b border-white/10 h-20 shadow-lg">
+        <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
+          {/* LOGO AREA */}
+          <Link href="/" className="flex items-center gap-3">
+            <div className="bg-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center p-1">
+              {/* Ensure your logo image exists at /public/logo-igdi.jpg */}
               <Image
                 src="/logo-igdi.jpg"
-                alt="IGDI School"
-                width={64}
-                height={64}
+                alt="Logo"
+                width={48}
+                height={48}
                 className="object-contain"
-                unoptimized
               />
             </div>
-            <div className="flex flex-col">
-              <span
-                className={`font-bold font-amiri tracking-wide transition-colors leading-none ${textColor} ${titleSize}`}
-              >
+            <div className="flex flex-col text-white">
+              <span className="font-bold font-amiri text-lg md:text-xl leading-none">
                 {t.schoolName}
               </span>
-              <span
-                className={`font-noto font-medium tracking-wider transition-colors mt-1 ${subtitleColor} ${language === "ar" ? "text-[0.7rem]" : "text-[0.6rem] uppercase tracking-[0.15em]"}`}
-              >
-                {t.schoolSubtitle}
+              <span className="text-[10px] text-school-gold font-noto tracking-widest uppercase mt-1">
+                {t.subtitle}
               </span>
             </div>
           </Link>
 
-          {/* DESKTOP MENU */}
-          <div className="hidden md:flex items-center gap-6 font-medium font-noto text-sm uppercase tracking-wider">
-            {navLinks.map((link, i) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={i}
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  className={`transition-all hover:scale-105 relative group
-                    ${isActive ? "text-school-gold font-bold" : textColor}
-                    ${!isActive && "hover:text-school-gold"}
-                  `}
-                >
-                  {link.name}
-                  {isActive && (
-                    <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-school-gold rounded-full"></span>
-                  )}
-                </Link>
-              );
-            })}
+          {/* DESKTOP LINKS */}
+          <div className="hidden md:flex items-center gap-6">
+            {navLinks.map((link, i) => (
+              <Link
+                key={i}
+                href={link.href}
+                className={`text-sm font-bold uppercase tracking-wider transition-colors hover:text-school-gold ${
+                  pathname === link.href ? "text-school-gold" : "text-white"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
 
             <Link
-              href="/donate"
-              className="px-6 py-2 bg-school-gold text-school-dark font-bold rounded-full hover:bg-white hover:shadow-lg transition-all shadow-md"
+              href="/register"
+              className="flex items-center gap-2 px-5 py-2 bg-school-gold text-school-dark font-bold rounded-full text-sm hover:bg-white transition-colors"
             >
-              {t.donate}
+              <GraduationCap size={18} />
+              {t.register}
             </Link>
           </div>
 
-          {/* CONTROLS */}
-          <div className="flex items-center gap-4 z-50">
+          {/* MOBILE CONTROLS */}
+          <div className="flex items-center gap-4">
             <button
               onClick={toggleLanguage}
-              className={`group flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all duration-300 ${borderColor} hover:border-school-gold hover:bg-school-gold`}
+              className="text-white hover:text-school-gold flex items-center gap-1 border border-white/20 px-3 py-1 rounded-full"
             >
-              <Globe
-                size={14}
-                className={`transition-colors ${textColor} group-hover:text-school-dark`}
-              />
-              <span
-                className={`text-xs font-bold tracking-widest ${textColor} group-hover:text-school-dark`}
-              >
-                {t.langCode}
-              </span>
+              <Globe size={14} />
+              <span className="text-xs font-bold">{t.langCode}</span>
             </button>
-
             <button
-              className={`md:hidden p-2 transition ${textColor}`}
               onClick={() => setIsMobileMenuOpen(true)}
+              className="md:hidden text-white"
             >
               <Menu size={28} />
             </button>
@@ -172,81 +109,47 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE DRAWER (Unchanged) */}
-      <div
-        className={`fixed inset-0 bg-black/60 z-[60] transition-opacity duration-300 backdrop-blur-sm ${
-          isMobileMenuOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-        onClick={() => setIsMobileMenuOpen(false)}
-      />
-
-      <div
-        className={`fixed top-0 right-0 h-full w-[85%] max-w-sm bg-white shadow-2xl z-[70] transform transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) flex flex-col ${
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gray-50/50">
-          <span className="text-school-dark font-bold font-amiri text-xl">
-            {t.schoolName}
-          </span>
-          <button
+      {/* MOBILE MENU */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[60] flex justify-end">
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-2 px-4 py-2 bg-school-dark/5 text-school-dark rounded-full text-xs font-bold hover:bg-school-gold hover:text-white transition-colors"
-          >
-            <span>{t.closeMenu}</span>
-            <LogOut
-              size={14}
-              className={language === "ar" ? "rotate-180" : ""}
-            />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-          {navLinks.map((link, i) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={i}
-                href={link.href}
-                onClick={(e) => handleLinkClick(e, link.href)}
-                className={`flex items-center justify-between px-4 py-4 rounded-xl transition-all ${
-                  isActive
-                    ? "bg-school-gold/10 text-school-gold font-bold"
-                    : "text-gray-600 hover:bg-gray-50 hover:translate-x-2 rtl:hover:-translate-x-2"
-                }`}
+          />
+          <div className="relative bg-white w-[85%] max-w-sm h-full shadow-2xl flex flex-col p-6">
+            <div className="flex justify-between items-center mb-8">
+              <span className="font-bold font-amiri text-2xl text-school-dark">
+                {t.schoolName}
+              </span>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="flex items-center gap-1 text-red-500 font-bold text-sm"
               >
-                <span className="font-amiri text-lg">{link.name}</span>
-                {isActive && (
-                  <div className="w-2 h-2 rounded-full bg-school-gold" />
-                )}
-                {!isActive && (
-                  <ChevronRight
-                    size={16}
-                    className={`text-gray-300 ${language === "ar" ? "rotate-180" : ""}`}
-                  />
-                )}
+                <LogOut size={16} /> {t.closeMenu}
+              </button>
+            </div>
+            <div className="space-y-2">
+              {navLinks.map((link, i) => (
+                <Link
+                  key={i}
+                  href={link.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block p-4 rounded-xl bg-gray-50 hover:bg-school-gold/10 font-bold text-gray-800"
+                >
+                  {link.name}
+                </Link>
+              ))}
+              <Link
+                href="/register"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block p-4 rounded-xl bg-school-gold text-school-dark font-bold text-center mt-4"
+              >
+                {t.register}
               </Link>
-            );
-          })}
-        </div>
-
-        <div className="p-6 border-t border-gray-100 bg-gray-50">
-          <Link
-            href="/donate"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center justify-center w-full py-4 bg-school-gold text-school-dark font-bold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-          >
-            {t.donate}
-          </Link>
-          <div className="text-center mt-4">
-            <span className="text-xs text-gray-400 font-noto uppercase tracking-widest">
-              {t.schoolSubtitle}
-            </span>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

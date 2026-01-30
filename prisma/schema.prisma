@@ -1,0 +1,74 @@
+// This is your new setup for Local Development
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // CHANGED: From "postgresql" to "sqlite"
+  provider = "sqlite"
+  // CHANGED: From env("DATABASE_URL") to a local file path
+  url      = "file:./dev.db"
+}
+
+// --- YOUR MODELS STAY EXACTLY THE SAME ---
+
+model Admin {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String   
+  name      String
+  role      String   @default("editor") 
+  createdAt DateTime @default(now())
+}
+
+model Registration {
+  id          String   @id @default(uuid())
+  program     String   
+  studentName String
+  phone       String
+  email       String?  
+  age         Int
+  city        String
+  status      String   @default("pending") 
+  createdAt   DateTime @default(now())
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title_ar    String
+  title_en    String
+  sheikh_ar   String
+  sheikh_en   String
+  category    String   
+  videoUrl    String?
+  duration    String
+  date        String
+  createdAt   DateTime @default(now())
+}
+
+model Book {
+  id          String   @id @default(cuid())
+  title_ar    String
+  title_en    String
+  author_ar   String
+  author_en   String
+  category    String
+  desc_ar     String   @default("")
+  desc_en     String   @default("")
+  // ADD THESE TWO LINES BELOW:
+  pdfUrl      String
+  coverUrl    String
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String
+  status    String   @default("unread") // 'unread' or 'read'
+  createdAt DateTime @default(now())
+}

@@ -1,11 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowLeft, Quote, Award, BookOpen } from "lucide-react";
+import { ArrowLeft, ArrowRight, Quote, BookOpen } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
-// Define the shape of the scholar object
-type Scholar = {
+// Define the Interface for TypeScript safety
+interface Scholar {
   id: number;
   image: string;
   name_ar: string;
@@ -16,123 +16,101 @@ type Scholar = {
   specialty_en: string;
   bio_ar: string;
   bio_en: string;
-  full_bio_ar?: string;
-  full_bio_en?: string;
-};
+  full_bio_ar?: string; // Optional HTML string
+  full_bio_en?: string; // Optional HTML string
+}
 
 export default function ScholarBioContent({ scholar }: { scholar: Scholar }) {
   const { language } = useLanguage();
   const isAr = language === "ar";
 
-  // --- TRANSLATIONS FOR LABELS ---
   const t = {
-    specialty: isAr ? "التخصص العلمي" : "Specialty",
-    role: isAr ? "المهام والصفة" : "Role & Position",
-    biography: isAr ? "السيرة العطرة" : "Biography",
-    back: isAr ? "العودة لقائمة الشيوخ" : "Back to Scholars List",
+    back: isAr ? "عودة للهيئة التعليمية" : "Back to Faculty",
+    specialty: isAr ? "التخصص:" : "Specialty:",
+    biography: isAr ? "السيرة الذاتية" : "Biography",
   };
 
   return (
-    <div className="min-h-screen bg-[#FCFCFC] pt-32 pb-24">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row gap-12 lg:gap-20 items-start">
-          {/* 1. SIDEBAR (Portrait & Info) */}
-          <div className="w-full md:w-1/3 shrink-0 md:sticky md:top-32">
-            {/* Arch Image Frame */}
-            <div className="relative w-full aspect-[3/4] rounded-t-full border-4 border-white shadow-2xl overflow-hidden mb-8">
+    <div className="min-h-screen bg-[#FCFCFC] font-noto">
+      {/* 1. HERO SECTION (Dark Top) */}
+      <div className="relative bg-[#0B1120] pt-32 pb-24 lg:pb-32 px-6 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-[0.05] mix-blend-overlay pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+          {/* Image (Left/Right based on Lang) */}
+          <div
+            className={`w-full max-w-sm md:w-1/3 relative shrink-0 ${isAr ? "md:order-last" : ""}`}
+          >
+            <div className="aspect-[3/4] relative rounded-t-full overflow-hidden border-4 border-white/10 shadow-2xl">
               <Image
                 src={scholar.image}
                 alt={isAr ? scholar.name_ar : scholar.name_en}
                 fill
                 className="object-cover"
+                priority
               />
-              <div className="absolute inset-0 border-[6px] border-school-gold/10 rounded-t-full pointer-events-none" />
+              {/* Inner Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent opacity-40" />
             </div>
-
-            {/* Info Box - NOW TRANSLATED */}
-            <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-6">
-              <div>
-                <div className="flex items-center gap-2 text-school-gold mb-2">
-                  <Award size={18} />
-                  <span className="text-xs font-bold uppercase tracking-widest">
-                    {t.specialty}
-                  </span>
-                </div>
-                <p
-                  className={`text-xl text-school-dark ${isAr ? "font-amiri" : "font-noto font-bold"}`}
-                >
-                  {isAr ? scholar.specialty_ar : scholar.specialty_en}
-                </p>
-              </div>
-
-              <div className="h-px w-full bg-gray-100" />
-
-              <div>
-                <div className="flex items-center gap-2 text-school-gold mb-2">
-                  <BookOpen size={18} />
-                  <span className="text-xs font-bold uppercase tracking-widest">
-                    {t.role}
-                  </span>
-                </div>
-                <p
-                  className={`text-xl text-school-dark ${isAr ? "font-amiri" : "font-noto font-bold"}`}
-                >
-                  {isAr ? scholar.role_ar : scholar.role_en}
-                </p>
-              </div>
-            </div>
+            {/* Decorative Border behind */}
+            <div className="absolute inset-0 border border-school-gold/30 rounded-t-full translate-x-4 translate-y-4 -z-10" />
           </div>
 
-          {/* 2. MAIN CONTENT (Biography) */}
-          <div className="flex-1">
-            <div className="mb-10">
-              <span className="text-school-gold font-bold tracking-[0.2em] uppercase text-xs block mb-3">
-                {t.biography}
-              </span>
-              <h1 className="text-4xl md:text-6xl font-amiri text-school-dark mb-4 leading-tight">
-                {isAr ? scholar.name_ar : scholar.name_en}
-              </h1>
-            </div>
-
-            {/* Intro Quote (Switches Language) */}
-            <div className="bg-school-gold/5 p-8 md:p-10 rounded-tl-[50px] rounded-br-[50px] border border-school-gold/20 mb-12 relative">
-              <Quote
-                className={`absolute top-6 text-school-gold/20 ${isAr ? "left-6 -scale-x-100" : "left-6"}`}
-                size={48}
-              />
-              <p
-                className={`italic text-gray-700 text-2xl leading-relaxed text-center relative z-10 ${isAr ? "font-amiri" : "font-noto"}`}
-              >
-                "{isAr ? scholar.bio_ar : scholar.bio_en}"
-              </p>
-            </div>
-
-            {/* Rich Text Content (Switches Language Completely) */}
-            <div
-              className={`prose prose-lg max-w-none text-gray-600 leading-loose ${isAr ? "prose-headings:font-amiri" : "prose-headings:font-sans"}`}
+          {/* Text Info */}
+          <div
+            className={`flex-1 text-center ${isAr ? "md:text-right" : "md:text-left"}`}
+          >
+            <Link
+              href="/scholars"
+              className="inline-flex items-center gap-2 text-school-gold/80 hover:text-school-gold text-xs uppercase tracking-widest font-bold mb-6 transition-colors"
             >
-              {/* Only render the language that is active */}
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: isAr
-                    ? scholar.full_bio_ar || ""
-                    : scholar.full_bio_en || "",
-                }}
-              />
-            </div>
+              {isAr ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
+              {t.back}
+            </Link>
 
-            {/* Back Link */}
-            <div className="mt-16 pt-8 border-t border-gray-100">
-              <Link
-                href="/scholars"
-                className="inline-flex items-center gap-3 text-school-dark font-bold hover:text-school-gold transition-colors group"
-              >
-                {/* Logic to flip arrow based on language/direction */}
-                <ArrowRight className="ltr:hidden group-hover:-translate-x-1 transition-transform" />
-                <ArrowLeft className="rtl:hidden group-hover:translate-x-1 transition-transform" />
-                <span>{t.back}</span>
-              </Link>
+            <h1 className="text-4xl md:text-6xl font-amiri text-white mb-4 leading-tight">
+              {isAr ? scholar.name_ar : scholar.name_en}
+            </h1>
+
+            <p className="text-xl text-school-gold font-amiri mb-8 opacity-90">
+              {isAr ? scholar.role_ar : scholar.role_en}
+            </p>
+
+            <div className="inline-flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full">
+              <BookOpen size={18} className="text-school-gold" />
+              <span className="text-gray-300 text-sm">
+                <span className="font-bold text-white mr-2">{t.specialty}</span>
+                {isAr ? scholar.specialty_ar : scholar.specialty_en}
+              </span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 2. CONTENT SECTION (White Bottom) */}
+      <div className="max-w-4xl mx-auto px-6 py-16 -mt-10 relative z-20">
+        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
+          <div className="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
+            <Quote size={24} className="text-school-gold rotate-180" />
+            <h2 className="text-2xl font-bold text-school-dark font-amiri">
+              {t.biography}
+            </h2>
+          </div>
+
+          {/* Render HTML Content safely */}
+          <div
+            className="prose prose-lg max-w-none prose-headings:font-amiri prose-headings:text-school-dark prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-school-dark"
+            dangerouslySetInnerHTML={{
+              __html: isAr
+                ? scholar.full_bio_ar || `<p>${scholar.bio_ar}</p>`
+                : scholar.full_bio_en || `<p>${scholar.bio_en}</p>`,
+            }}
+          />
+
+          {/* Signature / End Mark */}
+          <div className="mt-12 flex justify-center opacity-30">
+            <div className="w-16 h-px bg-school-dark" />
           </div>
         </div>
       </div>

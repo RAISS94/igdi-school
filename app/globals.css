@@ -1,17 +1,8 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* 1. Define the School's Design System */
-@theme {
-  --color-school-blue: #2a5298;
-  --color-school-gold: #d4af37;
-  --color-school-sand: #f4ebd0;
-  --color-school-dark: #1a2a44;
-
-  --font-amiri: var(--font-amiri);
-  --font-noto: var(--font-noto);
-}
-
-/* 2. Base Configuration */
+/* 1. Base Configuration */
 :root {
   --background: #ffffff;
   --foreground: #1a2a44;
@@ -20,33 +11,26 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  /* Use Noto for body text, Amiri (Harmattan) for headings */
   font-family: var(--font-noto), sans-serif;
-  overflow-x: hidden; /* Prevents scrollbar jumping during animations */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
-/* 3. RTL (Arabic) Specific Typography Tweaks */
+/* 2. RTL Specifics */
 [dir="rtl"] {
   text-align: right;
 }
 
-/* Arabic font needs slightly more line-height to look elegant */
-[dir="rtl"] .font-amiri {
-  line-height: 1.7;
+/* 3. Helper Classes */
+.font-amiri {
+  font-family: var(--font-amiri), serif; /* This is now Harmattan (Maghribi) */
 }
 
-/* 4. Global Transition Settings (Smooth Dark Mode) */
-.transition-colors {
-  transition-property:
-    color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
+.font-noto {
+  font-family: var(--font-noto), sans-serif;
 }
 
-/* 5. Custom "Premium" Animations & Effects */
-
-/* The Cinematic Hero Zoom */
+/* 4. Animations */
 @keyframes slow-zoom {
   0% {
     transform: scale(1);
@@ -60,34 +44,17 @@ body {
   animation: slow-zoom 20s infinite alternate ease-in-out;
 }
 
-/* Gold Glow for Premium Buttons */
-.btn-gold-glow {
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-  transition: box-shadow 0.3s ease;
-}
-
-.btn-gold-glow:hover {
-  box-shadow: 0 0 25px rgba(212, 175, 55, 0.6);
-}
-
-/* Custom Scrollbar for a polished look */
+/* 5. Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
-
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
-
-.dark ::-webkit-scrollbar-track {
-  background: #0f172a;
-}
-
 ::-webkit-scrollbar-thumb {
-  background: #d4af37; /* Gold scrollbar */
+  background: #d4af37;
   border-radius: 4px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: #b5952f;
 }

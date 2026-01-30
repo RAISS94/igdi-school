@@ -3,7 +3,7 @@ import type { Config } from "tailwindcss";
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}", // Crucial: finds your Hero.tsx
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -16,8 +16,9 @@ const config: Config = {
         },
       },
       fontFamily: {
-        amiri: ["var(--font-amiri)"],
-        noto: ["var(--font-noto)"],
+        // This will now pull the Harmattan font because of the layout.tsx change
+        amiri: ["var(--font-amiri)", "serif"],
+        noto: ["var(--font-noto)", "sans-serif"],
       },
     },
   },

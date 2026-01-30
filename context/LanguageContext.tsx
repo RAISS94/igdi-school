@@ -1,4 +1,3 @@
-// context/LanguageContext.tsx
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
 
@@ -7,6 +6,7 @@ type Language = "ar" | "en";
 interface LanguageContextType {
   language: Language;
   toggleLanguage: () => void;
+  setLanguage: (lang: Language) => void;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(
@@ -14,26 +14,31 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
 );
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>("ar"); // Default is Arabic
+  const [language, setLanguageState] = useState<Language>("ar");
 
-  // Optional: Save preference to localStorage so it remembers the user's choice
   useEffect(() => {
-    const saved = localStorage.getItem("school-lang") as Language;
-    if (saved) setLanguage(saved);
+    // Check local storage or browser preference on mount
+    const savedLang = localStorage.getItem("school-lang") as Language;
+    if (savedLang) {
+      setLanguageState(savedLang);
+    }
   }, []);
 
-  const toggleLanguage = () => {
-    const newLang = language === "ar" ? "en" : "ar";
-    setLanguage(newLang);
-    localStorage.setItem("school-lang", newLang);
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem("school-lang", lang);
 
-    // Update HTML direction for accessibility
-    document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = newLang;
+    // Update HTML dir attribute for RTL/LTR support
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.lang = lang;
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(language === "ar" ? "en" : "ar");
   };
 
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage }}>
+    <LanguageContext.Provider value={{ language, toggleLanguage, setLanguage }}>
       {children}
     </LanguageContext.Provider>
   );
@@ -41,7 +46,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
 export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useLanguage must be used within a LanguageProvider");
   }
   return context;
