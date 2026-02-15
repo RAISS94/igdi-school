@@ -12,51 +12,118 @@ import {
   Menu,
   X,
   Globe,
+  Newspaper, // For News
+  GraduationCap, // For Scholars
+  Shield, // For Admins
 } from "lucide-react";
 import { useState } from "react";
-import { useLanguage } from "../../context/LanguageContext"; // Ensure path is correct
+// Import BOTH to fix the context error
+import { LanguageProvider, useLanguage } from "../../context/LanguageContext";
 
+// 1. The Outer Wrapper (Keeps the "Memory" alive)
 export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  return (
+    <LanguageProvider>
+      <AdminShell>{children}</AdminShell>
+    </LanguageProvider>
+  );
+}
+
+// 2. The Inner Logic
+function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
   const isAr = language === "ar";
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
+  // === SPECIAL LOGIN LAYOUT ===
+  // If we are on the login page, hide the sidebar BUT show the Language Switcher
   if (pathname === "/qiyada/login") {
-    return <>{children}</>;
+    return (
+      <div dir={isAr ? "rtl" : "ltr"}>
+        {/* Floating Language Button */}
+        <button
+          onClick={() => setLanguage(isAr ? "en" : "ar")}
+          className="fixed top-6 left-6 z-50 flex items-center gap-2 bg-white/90 backdrop-blur shadow-md px-4 py-2 rounded-full text-gray-700 hover:text-school-gold transition-all hover:scale-105 font-bold"
+        >
+          <Globe size={18} />
+          <span>{isAr ? "English" : "العربية"}</span>
+        </button>
+
+        {/* The Login Form */}
+        {children}
+      </div>
+    );
   }
 
+  // === MENU ITEMS DEFINITION ===
   const menuItems = [
     {
       name: isAr ? "لوحة القيادة" : "Dashboard",
       href: "/qiyada",
       icon: LayoutDashboard,
+      id: "dashboard",
     },
     {
       name: isAr ? "طلبات التسجيل" : "Registrations",
       href: "/qiyada/registrations",
       icon: Users,
+      id: "registrations",
     },
     {
       name: isAr ? "إدارة الدروس" : "Courses",
       href: "/qiyada/courses",
       icon: Video,
+      id: "courses",
+    },
+    {
+      name: isAr ? "أخبار و مقالات" : "News & Blog",
+      href: "/qiyada/news",
+      icon: Newspaper,
+      id: "news",
+    },
+    {
+      name: isAr ? "العلماء والشيوخ" : "Scholars",
+      href: "/qiyada/scholars",
+      icon: GraduationCap,
+      id: "scholars",
     },
     {
       name: isAr ? "المكتبة" : "Library",
       href: "/qiyada/library",
       icon: BookOpen,
+      id: "library",
     },
     {
       name: isAr ? "الرسائل" : "Messages",
       href: "/qiyada/messages",
       icon: MessageSquare,
+      id: "messages",
+    },
+    {
+      name: isAr ? "إدارة المشرفين" : "Admin Management",
+      href: "/qiyada/admins",
+      icon: Shield,
+      id: "admins",
     },
   ];
+
+  // === PERMISSION LOGIC (PLACEHOLDER) ===
+  // In the future, you will fetch the current user here and check their 'permissions' array.
+  // For now, we return TRUE so you can see and build the pages.
+  const hasPermission = (pageId: string) => {
+    // Example Logic for later:
+    // if (currentUser.role === 'super_admin') return true;
+    // return currentUser.permissions.includes(pageId);
+
+    return true; // <--- DEFAULT ALLOW ALL
+  };
+
+  const visibleMenuItems = menuItems.filter((item) => hasPermission(item.id));
 
   const t = {
     title: isAr ? "القيادة" : "QIYADA",
@@ -85,6 +152,7 @@ export default function AdminLayout({
             <h1 className="text-2xl font-amiri font-bold text-school-gold tracking-wider">
               {t.title}
             </h1>
+            {/* Sidebar Language Switcher */}
             <button
               onClick={() => setLanguage(isAr ? "en" : "ar")}
               className="text-gray-400 hover:text-white transition-colors"
@@ -94,8 +162,8 @@ export default function AdminLayout({
             </button>
           </div>
 
-          <nav className="flex-1 px-4 py-8 space-y-2">
-            {menuItems.map((item) => {
+          <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
+            {visibleMenuItems.map((item) => {
               const isActive = pathname === item.href;
               return (
                 <Link
@@ -127,7 +195,7 @@ export default function AdminLayout({
         </div>
       </aside>
 
-      {/* MAIN CONTENT */}
+      {/* MAIN CONTENT AREA */}
       <div
         className={`flex-1 flex flex-col min-h-screen transition-all duration-300 ${isAr ? "lg:mr-64" : "lg:ml-64"}`}
       >

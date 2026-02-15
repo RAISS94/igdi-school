@@ -1,5 +1,5 @@
 "use client";
-import { Clock, ArrowRight, Play } from "lucide-react";
+import { Clock, ArrowRight, Play, User } from "lucide-react";
 import Link from "next/link";
 import { useLanguage } from "../context/LanguageContext";
 
@@ -7,9 +7,13 @@ type Course = {
   id: string;
   title_ar: string;
   title_en: string;
+  description_ar: string;
+  description_en: string;
+  sheikh_ar: string;
+  sheikh_en: string;
   category: string;
   duration: string;
-  videoUrl: string;
+  videoUrl: string | null;
 };
 
 export default function CoursesSection({ courses }: { courses: Course[] }) {
@@ -63,9 +67,7 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {" "}
-          {/* Reduced gap from 8 to 6 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.length === 0 ? (
             <div className="col-span-3 text-center py-16 bg-[#1A202C]/50 rounded-3xl border border-white/10 border-dashed">
               <p className="text-gray-400 font-amiri text-xl">{t.empty}</p>
@@ -75,57 +77,61 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
               <Link
                 href={`/courses/${course.id}`}
                 key={course.id}
-                // CHANGED: Reduced border radius from 2rem to 1.5rem (3xl)
-                className="group relative block bg-[#1A202C] border border-white/10 rounded-3xl overflow-hidden hover:border-school-gold/50 transition-all duration-500 hover:-translate-y-2 shadow-2xl"
+                className="group relative flex flex-col bg-[#161b2a] border border-white/5 rounded-3xl overflow-hidden hover:border-school-gold/30 hover:bg-[#1c2233] transition-all duration-300 hover:-translate-y-1 shadow-2xl"
               >
-                {/* Image Container */}
-                {/* CHANGED: Aspect Ratio from [16/10] to video (16/9) for shorter height */}
+                {/* Image */}
                 <div className="relative aspect-video overflow-hidden">
                   <img
                     src={getThumbnail(course.videoUrl || "")}
                     alt={course.title_en}
-                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A202C] via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#161b2a] to-transparent opacity-90" />
 
-                  {/* Category Badge */}
+                  {/* Floating Play Button */}
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
+                    <div className="w-12 h-12 bg-school-gold text-school-dark rounded-full flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
+                      <Play size={20} fill="currentColor" className="ml-1" />
+                    </div>
+                  </div>
+
                   <div className="absolute top-4 left-4 rtl:right-4 rtl:left-auto">
                     <span className="px-3 py-1 bg-school-gold text-school-dark text-[10px] font-bold uppercase tracking-widest rounded-full shadow-lg">
                       {course.category}
                     </span>
                   </div>
-
-                  {/* Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-75 group-hover:scale-100">
-                    <div className="w-14 h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 shadow-2xl">
-                      <Play size={20} fill="currentColor" className="ml-1" />
-                    </div>
-                  </div>
                 </div>
 
-                {/* Content Container */}
-                {/* CHANGED: Reduced padding from p-8 to p-6 */}
-                <div className="p-6 relative">
-                  <div className="flex items-center gap-2 text-xs text-school-gold font-mono mb-2 uppercase tracking-wider">
-                    <Clock size={12} />
-                    <span>{course.duration}</span>
+                {/* Content */}
+                <div className="p-6 flex-1 flex flex-col">
+                  {/* Meta */}
+                  <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
+                    <span className="flex items-center gap-1.5">
+                      <User size={12} className="text-school-gold" />{" "}
+                      {isAr ? course.sheikh_ar : course.sheikh_en}
+                    </span>
+                    <span className="flex items-center gap-1.5 font-mono">
+                      <Clock size={12} /> {course.duration}
+                    </span>
                   </div>
 
-                  {/* CHANGED: Reduced text size from 2xl to xl */}
-                  <h3 className="text-xl font-amiri text-white font-bold leading-relaxed mb-4 group-hover:text-school-gold transition-colors line-clamp-2 min-h-[3.5rem]">
+                  {/* Title */}
+                  <h3 className="text-xl font-amiri text-white font-bold leading-relaxed mb-3 group-hover:text-school-gold transition-colors">
                     {isAr ? course.title_ar : course.title_en}
                   </h3>
 
-                  <div className="pt-4 border-t border-white/5 flex items-center justify-between text-gray-400 text-xs group/btn">
-                    <span className="group-hover:text-white transition-colors font-bold uppercase tracking-widest">
-                      {t.watch}
-                    </span>
-                    <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:bg-school-gold group-hover:text-school-dark group-hover:border-school-gold transition-all">
-                      <ArrowRight
-                        size={14}
-                        className={isAr ? "rotate-180" : ""}
-                      />
-                    </div>
+                  {/* Description (New) */}
+                  <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed mb-6">
+                    {isAr ? course.description_ar : course.description_en}
+                  </p>
+
+                  {/* Footer */}
+                  <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">
+                    <span>{t.watch}</span>
+                    <ArrowRight
+                      size={14}
+                      className={`text-school-gold ${isAr ? "rotate-180" : ""}`}
+                    />
                   </div>
                 </div>
               </Link>

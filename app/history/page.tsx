@@ -1,41 +1,51 @@
 "use client";
-import { useState } from "react"; // Added useState
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, History, X, ZoomIn } from "lucide-react"; // Added X and ZoomIn
+import { ArrowLeft, ArrowRight, History, X, ZoomIn } from "lucide-react";
 import { useLanguage } from "../../context/LanguageContext";
 
 // --- CONTENT DATA ---
 const historyEvents = [
   {
-    year: "1940",
-    title_ar: "التأسيس ووضع الحجر الأساس",
-    title_en: "The Founding & First Stone",
+    year: "01",
+    title_ar: "من نحن",
+    title_en: "Who We Are",
     desc_ar:
-      "في قلب جبال اشتوكة، وضع المؤسسون الأوائل اللبنة الأولى لهذا الصرح العلمي، بنية خالصة لوجه الله تعالى.",
+      "مدرسة إيكضي العتيقة مؤسسة علمية قرآنية راسخة الجذور بقبيلة أسيف أودرار، جماعة ايت اسفن، بإقليم تيزنيت، تُعنى بتحفيظ القرآن الكريم وتعليم العلوم الشرعية وفق المنهج العتيق الذي عُرفت به مدارس سوس العلمية العتيقة. وقد ظلت المدرسة، منذ تأسيسها، منارةً للعلم والتربية، ومركزًا لتكوين حفظة القرآن وطلبة العلم، مساهمةً في ترسيخ القيم الدينية والأخلاقية، وخدمة المجتمع المحلي في ارتباط وثيق بثوابته الدينية والوطنية.",
     desc_en:
-      "In the heart of the Chtouka mountains, the founding fathers laid the first stone of this scientific edifice, with pure intention for the sake of Allah.",
-    image: "/igdi-hero.png",
+      "Igdi Traditional School is a deeply rooted Quranic scientific institution in the Asif Ouderar tribe, Ait Isafen community, Tiznit province. It is dedicated to memorizing the Holy Quran and teaching Sharia sciences according to the traditional methodology known in the Sous scientific schools. Since its foundation, the school has remained a beacon of knowledge and education, a center for training Quran memorizers and students of knowledge, contributing to establishing religious and moral values and serving the local community in close connection with its religious and national constants.",
+    image: "/story1.jpeg",
   },
   {
-    year: "1985",
-    title_ar: "عصر التوسع والازدهار",
-    title_en: "Era of Expansion",
+    year: "07 AH",
+    title_ar: "التاريخ",
+    title_en: "History",
     desc_ar:
-      "شهدت المدرسة توسعة كبيرة لاستيعاب أعداد المتوافدين من طلبة العلم من مختلف ربوع المملكة.",
+      "تندرج مدرسة إيكضي ضمن سلسلة المدارس العتيقة التي نشأت استجابةً لحاجة المجتمع المحلي إلى حفظ القرآن الكريم ونشر العلوم الشرعية. وقد أسهمت، عبر مسيرتها العلمية، في تخريج عدد من العلماء والفقهاء وحفظة القرآن، الذين اضطلعوا بأدوار تعليمية ودعوية داخل المنطقة وخارجها. ويمثل تاريخ المدرسة جزءًا من الذاكرة العلمية للتراث السوسي، وهو تاريخ يحتاج إلى مزيد من البحث والتوثيق لاستجلاء مختلف مراحله وإبراز مكانته ضمن الحركة العلمية بالجنوب المغربي. وتأسيس مدرسة إيكضي قديم يقال إنها مبنية في القرن السابع الهجري 7هـ.",
     desc_en:
-      "The school witnessed a major expansion to accommodate the influx of students from various parts of the Kingdom.",
-    image: "/igdi-hero.png",
+      "Igdi School falls within the chain of traditional schools that emerged in response to the local community's need to memorize the Holy Quran and spread Sharia sciences. Throughout its scientific journey, it has contributed to graduating a number of scholars, jurists, and Quran memorizers who have taken on educational and advocacy roles within and outside the region. The school's history represents part of the scientific memory of the Sous heritage, a history that needs further research to clarify its various stages. The founding of Igdi School is ancient, said to be built in the 7th Hijri century (7 AH).",
+    image: "/story2.jpg",
   },
   {
-    year: "2024",
-    title_ar: "النهضة الرقمية",
-    title_en: "The Digital Renaissance",
+    year: "Loc",
+    title_ar: "الموقع",
+    title_en: "Location",
     desc_ar:
-      "بدأت المدرسة مرحلة جديدة من التحديث، مع الحفاظ على جوهر التعليم العتيق الأصيل.",
+      "تقع مدرسة إيكضي بقبيلة أسيف أودرار، التابعة لجماعة أيت إيسافن بإقليم تيزنيت، على مسافة تقارب 60 كيلومترًا من مدينة تيزنيت في اتجاه أنزي. وتتميز المدرسة بموقع جغرافي هادئ تحيط به الهضاب والمرتفعات، ويشرف عليها كل من جبل تازكا جنوبًا وجبل تاماترت شمالًا، مما وفر بيئة مناسبة للتحصيل العلمي، والانقطاع للقرآن وطلب العلم.",
     desc_en:
-      "The school began a new phase of modernization, while preserving the essence of authentic traditional education.",
-    image: "/igdi-hero.png",
+      "Igdi School is located in the Asif Ouderar tribe, affiliated with the Ait Isafen community in Tiznit province, approximately 60 kilometers from the city of Tiznit in the direction of Anzi. The school features a quiet geographic location surrounded by plateaus and highlands, overlooked by Mount Tazka to the south and Mount Tamatert to the north, providing a suitable environment for academic achievement and dedication to the Quran and seeking knowledge.",
+    image: "/story3.jpeg",
+  },
+  {
+    year: "Goal",
+    title_ar: "الرسالة",
+    title_en: "Mission",
+    desc_ar:
+      "تسعى مدرسة إيكضي إلى الإسهام في حفظ القرآن الكريم وتكوين جيل متشبّع بقيم الإسلام الوسطية، متسلّح بالعلم الشرعي، ومؤهّل لخدمة دينه ووطنه. كما تهدف المدرسة إلى صيانة التراث العلمي العتيق، وترسيخ مكانة القرآن في المجتمع، وتعزيز الشراكة مع المحيط المحلي في إطار من المسؤولية والتكافل، خدمةً للعلم وأهله.",
+    desc_en:
+      "Igdi School seeks to contribute to the memorization of the Holy Quran and form a generation imbued with the values of moderate Islam, armed with Sharia knowledge, and qualified to serve their religion and country. The school also aims to preserve the ancient scientific heritage, establish the status of the Quran in society, and enhance partnership with the local surroundings within a framework of responsibility and solidarity, serving knowledge and its people.",
+    image: "/story4.jpeg",
   },
 ];
 
@@ -52,7 +62,7 @@ export default function HistoryPage() {
       <div className="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/igdi-hero.png"
+            src="/igdi-history-bg.jpg"
             alt="Old Igdi School Building"
             fill
             className="object-cover animate-slow-zoom opacity-60"
@@ -90,7 +100,8 @@ export default function HistoryPage() {
             return (
               <div
                 key={index}
-                className={`relative flex flex-col md:flex-row items-center gap-12 ${isEven ? "" : "md:flex-row-reverse"}`}
+                // CHANGED: items-center replaced with items-stretch to match heights
+                className={`relative flex flex-col md:flex-row items-stretch gap-12 ${isEven ? "" : "md:flex-row-reverse"}`}
               >
                 {/* Year Badge */}
                 <div className="absolute left-4 md:left-1/2 -translate-x-[0.45rem] md:-translate-x-1/2 w-4 h-4 rounded-full bg-school-gold border-4 border-[#0B1120] z-20 shadow-[0_0_20px_rgba(212,175,55,1)]">
@@ -99,7 +110,8 @@ export default function HistoryPage() {
 
                 {/* TEXT CARD */}
                 <div
-                  className={`w-full md:w-1/2 pl-12 md:pl-0 ${isEven ? "md:pr-16 md:text-right" : "md:pl-16 md:text-left"}`}
+                  // CHANGED: Added flex flex-col justify-center to properly center the text box
+                  className={`w-full md:w-1/2 pl-12 md:pl-0 flex flex-col justify-center ${isEven ? "md:pr-16 md:text-right" : "md:pl-16 md:text-left"}`}
                 >
                   <div className="relative p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm hover:bg-white/[0.05] hover:border-school-gold/30 transition-all duration-500 group">
                     <span
@@ -125,11 +137,13 @@ export default function HistoryPage() {
 
                 {/* IMAGE CARD (Clickable) */}
                 <div
-                  className={`w-full md:w-1/2 pl-12 md:pl-0 ${isEven ? "md:pl-8" : "md:pr-8"}`}
+                  // CHANGED: Added flex flex-col to wrap the stretching child properly
+                  className={`w-full md:w-1/2 pl-12 md:pl-0 flex flex-col ${isEven ? "md:pl-8" : "md:pr-8"}`}
                 >
                   <div
-                    onClick={() => setSelectedImage(event.image)} // Open Modal
-                    className="relative h-64 md:h-80 w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
+                    onClick={() => setSelectedImage(event.image)}
+                    // CHANGED: Removed md:h-80. Added h-64 md:h-auto and flex-1 so it stretches vertically
+                    className="relative h-64 md:h-auto flex-1 w-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl group cursor-pointer"
                   >
                     <Image
                       src={event.image}

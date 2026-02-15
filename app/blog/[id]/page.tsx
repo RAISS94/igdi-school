@@ -1,60 +1,60 @@
-import { newsItems } from "../../../data/newsData";
+import { PrismaClient } from "@prisma/client";
+import { notFound } from "next/navigation";
 import BlogPostContent from "../../../components/BlogPostContent";
 
+const prisma = new PrismaClient();
+
 // --- 1. SEO METADATA (Server Side) ---
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const post = newsItems.find((p) => p.id.toString() === params.id);
-  // Returns English title by default for metadata, but Google reads the page content too
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const post = await prisma.article.findUnique({ where: { id } });
+
   return {
     title: post ? `${post.title_en} | IGDI Journal` : "Article Not Found",
-    description: post ? post.excerpt_en : "School news and updates.",
+    description: post
+      ? post.content_en.substring(0, 150)
+      : "School news and updates.",
   };
 }
 
 // --- 2. MAIN PAGE COMPONENT ---
-export default function BlogPostPage({ params }: { params: { id: string } }) {
-  // A. Find the real post
-  let post = newsItems.find((p) => p.id.toString() === params.id);
+export default async function BlogPostPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
 
-  // B. Fallback Fake Data (So you don't see errors during development)
-  if (!post) {
-    post = {
-      id: 999,
-      image: "/igdi-hero.jpeg",
-      date: "2026-02-01",
-      category_ar: "تجربة",
-      category_en: "Preview",
-      title_ar: "عنوان المقال التجريبي: كيف يظهر التصميم بالعربية؟",
-      title_en: "Experimental Article Title: How Design Looks in English?",
-      excerpt_ar:
-        "هذا نص تمهيدي عريض يظهر في بداية المقال لشد انتباه القارئ وتلخيص المحتوى.",
-      excerpt_en:
-        "This is a bold introductory text appearing at the start of the article to grab attention.",
-      // Content for Arabic Mode
-      content_ar: `
-        <p>هذا هو المحتوى الرئيسي للمقال. عندما تكون اللغة عربية، سيظهر هذا النص فقط.</p>
-        <h3>عنوان فرعي داخل المقال</h3>
-        <p>يمكننا إضافة قوائم ونقاط:</p>
-        <ul>
-          <li>النقطة الأولى مهمة جداً.</li>
-          <li>النقطة الثانية توضح الفكرة.</li>
-        </ul>
-        <p>وهكذا يستمر المقال بتنسيق جميل ومريح للقراءة.</p>
-      `,
-      // Content for English Mode
-      content_en: `
-        <p>This is the main content of the article. When the language is English, only this text will appear.</p>
-        <h3>Subheading inside article</h3>
-        <p>We can add lists and bullet points:</p>
-        <ul>
-          <li>The first point is very important.</li>
-          <li>The second point clarifies the idea.</li>
-        </ul>
-        <p>And so the article continues with a beautiful, readable layout.</p>
-      `,
-    };
-  }
+  // Find the real post in the database
+  const article = await prisma.article.findUnique({ where: { id } });
 
-  // C. Pass data to the Client Component
-  return <BlogPostContent post={post} />;
+  // Return 404 page if someone types a bad URL
+  if (!article) return notFound();
+
+  // Safety check for the image string here too
+  const isValidImage =
+    article.image &&
+    (article.image.startsWith("/") || article.image.startsWith("http"));
+
+  // Map the Prisma data so it matches the format your component expects
+  const formattedPost = {
+    id: article.id,
+    image: isValidImage ? article.image : "/igdi-hero.jpeg", // Uses a fallback if image is missing
+    date: article.createdAt.toLocaleDateString(),
+    category_ar: "أخبار",
+    category_en: "News",
+    title_ar: article.title_ar,
+    title_en: article.title_en,
+    excerpt_ar: article.content_ar.substring(0, 100) + "...", // Create a short excerpt from the content
+    excerpt_en: article.content_en.substring(0, 100) + "...",
+    // Wrap content in paragraph tags and replace line breaks so it looks nice in HTML
+    content_ar: `<p>${article.content_ar.replace(/\n/g, "<br/>")}</p>`,
+    content_en: `<p>${article.content_en.replace(/\n/g, "<br/>")}</p>`,
+  };
+
+  return <BlogPostContent post={formattedPost as any} />;
 }

@@ -1,10 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, User } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
-export default function TeachersSection() {
+// Accept the teachers array from the database
+export default function TeachersSection({ teachers }: { teachers: any[] }) {
   const { language } = useLanguage();
   const isAr = language === "ar";
 
@@ -15,32 +16,8 @@ export default function TeachersSection() {
     readBio: isAr ? "اقرأ السيرة" : "Read Biography",
   };
 
-  const teachers = [
-    {
-      id: 1,
-      name_ar: "الشيخ محمد",
-      name_en: "Sheikh Mohammed",
-      role_ar: "شيخ المدرسة",
-      role_en: "Head Master",
-      image: "/teacher1.jpg",
-    },
-    {
-      id: 2,
-      name_ar: "الشيخ أحمد",
-      name_en: "Sheikh Ahmed",
-      role_ar: "أستاذ الفقه",
-      role_en: "Fiqh Professor",
-      image: "/teacher2.jpg",
-    },
-    {
-      id: 3,
-      name_ar: "الشيخ علي",
-      name_en: "Sheikh Ali",
-      role_ar: "أستاذ النحو",
-      role_en: "Grammar Professor",
-      image: "/teacher3.jpg",
-    },
-  ];
+  // If there are no teachers in the DB, don't render the section
+  if (!teachers || teachers.length === 0) return null;
 
   return (
     <section className="py-24 bg-gray-50 relative overflow-hidden border-t border-gray-200">
@@ -77,8 +54,8 @@ export default function TeachersSection() {
               <div className="relative w-[260px] mx-auto">
                 <div className="absolute inset-0 border border-school-gold/40 rounded-t-full translate-x-2 translate-y-2 pointer-events-none transition-transform duration-500 group-hover:translate-x-1 group-hover:translate-y-1" />
 
-                <div className="relative w-full aspect-[3/4] rounded-t-full shadow-lg overflow-hidden bg-gray-200 z-10 transition-transform duration-500 group-hover:-translate-y-2">
-                  <div className="absolute inset-0 bg-school-dark/5" />
+                <div className="relative w-full aspect-[3/4] rounded-t-full shadow-lg overflow-hidden bg-gray-200 z-10 transition-transform duration-500 group-hover:-translate-y-2 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-school-dark/5 z-20" />
 
                   {scholar.image ? (
                     <Image
@@ -89,14 +66,10 @@ export default function TeachersSection() {
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                      <span className="text-xs font-bold opacity-50">
-                        No Image
-                      </span>
-                    </div>
+                    <User size={48} className="text-gray-400 opacity-50" />
                   )}
 
-                  <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.1)] pointer-events-none rounded-t-full" />
+                  <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.1)] pointer-events-none rounded-t-full z-20" />
                 </div>
 
                 <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 z-20">
@@ -111,11 +84,11 @@ export default function TeachersSection() {
                 <h3 className="text-xl font-bold font-amiri text-school-dark group-hover:text-school-gold transition-colors">
                   {isAr ? scholar.name_ar : scholar.name_en}
                 </h3>
+                {/* Changed role to title to match DB schema */}
                 <p className="text-xs text-gray-500 font-noto tracking-wider uppercase opacity-80">
-                  {isAr ? scholar.role_ar : scholar.role_en}
+                  {isAr ? scholar.title_ar : scholar.title_en}
                 </p>
 
-                {/* CHANGED: Always Visible Link */}
                 <div className="pt-4">
                   <Link
                     href={`/scholars/${scholar.id}`}

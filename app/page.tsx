@@ -21,12 +21,20 @@ export default async function Home() {
     orderBy: { createdAt: "desc" },
   });
 
+  // NEW: Fetch 3 Scholars/Teachers from the database
+  const recentScholars = await prisma.scholar.findMany({
+    take: 3,
+    orderBy: { createdAt: "asc" }, // Usually want the "Head Master" first, so sorting by oldest added
+  });
+
   return (
     <main>
       <Hero />
-      <TeachersSection />
 
-      {/* Pass Real Data */}
+      {/* Pass Real Scholars Data */}
+      <TeachersSection teachers={recentScholars} />
+
+      {/* Pass Real Courses Data */}
       <CoursesSection courses={recentCourses} />
 
       {/* Pass Real Books */}

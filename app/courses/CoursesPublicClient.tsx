@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { Play, Clock, User, ArrowRight, Search, Filter } from "lucide-react";
+import { Play, Clock, User, ArrowRight } from "lucide-react";
 import { useLanguage } from "../../context/LanguageContext";
 
 // ... (Helper function getYouTubeId same as before) ...
@@ -11,7 +11,14 @@ function getYouTubeId(url: string) {
   return match && match[2].length === 11 ? match[2] : null;
 }
 
-export default function CoursesPublicClient({ courses }: { courses: any[] }) {
+// UPDATE: Accept 'categories' prop
+export default function CoursesPublicClient({
+  courses,
+  categories,
+}: {
+  courses: any[];
+  categories: any[];
+}) {
   const { language } = useLanguage();
   const isAr = language === "ar";
   const [activeCategory, setActiveCategory] = useState("All");
@@ -22,18 +29,15 @@ export default function CoursesPublicClient({ courses }: { courses: any[] }) {
       ? "دروس ومحاضرات علمية مؤصلة"
       : "Authentic Scientific Lectures & Courses",
     all: isAr ? "الكل" : "All",
-    cat_fiqh: isAr ? "الفقه" : "Fiqh",
-    cat_grammar: isAr ? "النحو" : "Grammar",
-    cat_hadith: isAr ? "الحديث" : "Hadith",
-    cat_quran: isAr ? "القرآن" : "Quran",
   };
 
-  const categories = [
+  // FIX: Build the filter list dynamically from your Database
+  const filterButtons = [
     { id: "All", label: t.all },
-    { id: "Fiqh", label: t.cat_fiqh },
-    { id: "Grammar", label: t.cat_grammar },
-    { id: "Hadith", label: t.cat_hadith },
-    { id: "Quran", label: t.cat_quran },
+    ...categories.map((cat) => ({
+      id: cat.name, // The name stored in the DB (e.g., "Fiqh")
+      label: cat.name, // The label to show
+    })),
   ];
 
   const filteredCourses =
@@ -59,9 +63,9 @@ export default function CoursesPublicClient({ courses }: { courses: any[] }) {
           </h1>
         </div>
 
-        {/* FILTERS */}
+        {/* DYNAMIC FILTERS */}
         <div className="flex flex-wrap justify-center gap-3 mb-16">
-          {categories.map((cat) => (
+          {filterButtons.map((cat) => (
             <button
               key={cat.id}
               onClick={() => setActiveCategory(cat.id)}
@@ -79,7 +83,7 @@ export default function CoursesPublicClient({ courses }: { courses: any[] }) {
         {/* GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCourses.map((course) => {
-            const videoId = getYouTubeId(course.videoUrl);
+            const videoId = getYouTubeId(course.videoUrl || "");
             return (
               <Link
                 href={`/courses/${course.id}`}
@@ -88,7 +92,11 @@ export default function CoursesPublicClient({ courses }: { courses: any[] }) {
               >
                 <div className="relative aspect-video bg-black overflow-hidden">
                   <img
-                    src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
+                    src={
+                      videoId
+                        ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                        : ""
+                    }
                     alt={course.title_en}
                     className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                   />

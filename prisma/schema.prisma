@@ -1,65 +1,94 @@
-// This is your new setup for Local Development
+// prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  // CHANGED: From "postgresql" to "sqlite"
   provider = "sqlite"
-  // CHANGED: From env("DATABASE_URL") to a local file path
   url      = "file:./dev.db"
 }
 
-// --- YOUR MODELS STAY EXACTLY THE SAME ---
-
+// --- UPDATED ADMIN MODEL ---
 model Admin {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String   
+  name        String
+  role        String   @default("editor") // 'super_admin' or 'editor'
+  
+  // Stores allowed pages as a JSON string e.g. '["/qiyada/news", "/qiyada/courses"]'
+  permissions String   @default("[]") 
+  
+  createdAt   DateTime @default(now())
+}
+
+// --- NEW: NEWS / BLOG ---
+model Article {
+  id             String   @id @default(uuid())
+  title_ar       String
+  title_en       String
+  content_ar     String   // We will use a textarea for this
+  content_en     String
+  author         String
+  image          String?
+  published      Boolean  @default(true)
+  createdAt      DateTime @default(now())
+}
+
+// --- NEW: SCHOLARS ---
+model Scholar {
+  id             String   @id @default(uuid())
+  name_ar        String
+  name_en        String
+  title_ar       String   // e.g. "Sheikh" or "Professor"
+  title_en       String
+  bio_ar         String
+  bio_en         String
+  image          String?
+  createdAt      DateTime @default(now())
+}
+
+// --- KEEP YOUR EXISTING MODELS BELOW (Registration, Course, Book, etc.) ---
+model Registration {
   id        String   @id @default(uuid())
-  email     String   @unique
-  password  String   
-  name      String
-  role      String   @default("editor") 
+  program   String   
+  studentName String
+  phone     String
+  email     String?  
+  age       Int
+  city      String
+  status    String   @default("pending") 
   createdAt DateTime @default(now())
 }
 
-model Registration {
-  id          String   @id @default(uuid())
-  program     String   
-  studentName String
-  phone       String
-  email       String?  
-  age         Int
-  city        String
-  status      String   @default("pending") 
-  createdAt   DateTime @default(now())
-}
-
 model Course {
-  id          String   @id @default(uuid())
-  title_ar    String
-  title_en    String
-  sheikh_ar   String
-  sheikh_en   String
-  category    String   
-  videoUrl    String?
-  duration    String
-  date        String
-  createdAt   DateTime @default(now())
+  id        String   @id @default(uuid())
+  title_ar  String
+  title_en  String
+  sheikh_ar String
+  sheikh_en String
+  description_ar String @default("")
+  description_en String @default("")
+  category  String   
+  videoUrl  String?
+  duration  String
+  date      String   
+  createdAt DateTime @default(now())
 }
 
 model Book {
-  id          String   @id @default(cuid())
-  title_ar    String
-  title_en    String
-  author_ar   String
-  author_en   String
-  category    String
-  desc_ar     String   @default("")
-  desc_en     String   @default("")
-  // ADD THESE TWO LINES BELOW:
-  pdfUrl      String
-  coverUrl    String
-  createdAt   DateTime @default(now())
+  id        String   @id @default(cuid())
+  title_ar  String
+  title_en  String
+  author_ar String
+  author_en String
+  category  String
+  desc_ar   String   @default("")
+  desc_en   String   @default("")
+  pdfUrl    String
+  coverUrl  String
+  createdAt DateTime @default(now())
 }
 
 model ContactMessage {
@@ -69,6 +98,11 @@ model ContactMessage {
   phone     String?
   subject   String
   message   String
-  status    String   @default("unread") // 'unread' or 'read'
+  status    String   @default("unread") 
   createdAt DateTime @default(now())
+}
+
+model CourseCategory {
+  id    String @id @default(uuid())
+  name  String @unique
 }
