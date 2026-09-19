@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { Clock, User, ArrowRight, Calendar, Share2, Play } from "lucide-react";
-import { useLanguage } from "../../../context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 // Define the Types
 type Course = {

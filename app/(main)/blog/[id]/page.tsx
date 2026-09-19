@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import BlogPostContent from "../../../components/BlogPostContent";
+import BlogPostContent from "@/components/BlogPostContent";
 import { getBlogPostById } from "@/sanity/lib/queries";
 
 export const revalidate = 60;
@@ -37,13 +37,19 @@ export default async function BlogPostPage({
   const formattedPost = {
     id: article.id,
     image: article.image || "/igdi-hero.jpeg",
-    date: article.createdAt ? new Date(article.createdAt).toLocaleDateString() : new Date().toLocaleDateString(),
+    date: article.createdAt
+      ? new Date(article.createdAt).toLocaleDateString()
+      : new Date().toLocaleDateString(),
     category_ar: article.category_ar || "أخبار",
     category_en: article.category_en || "News",
     title_ar: article.title_ar,
     title_en: article.title_en,
-    excerpt_ar: article.content_ar ? article.content_ar.substring(0, 100) + "..." : "",
-    excerpt_en: article.content_en ? article.content_en.substring(0, 100) + "..." : "",
+    excerpt_ar: article.content_ar
+      ? article.content_ar.substring(0, 100) + "..."
+      : "",
+    excerpt_en: article.content_en
+      ? article.content_en.substring(0, 100) + "..."
+      : "",
     content_ar: `<p>${(article.content_ar || "").replace(/\n/g, "<br/>")}</p>`,
     content_en: `<p>${(article.content_en || "").replace(/\n/g, "<br/>")}</p>`,
   };

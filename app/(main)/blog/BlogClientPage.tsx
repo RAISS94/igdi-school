@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, Calendar, Tag, Newspaper } from "lucide-react";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function BlogClientPage({ articles }: { articles: any[] }) {
   const { language } = useLanguage();

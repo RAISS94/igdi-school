@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import ScholarBioContent from "../../../components/ScholarBioContent";
+import ScholarBioContent from "@/components/ScholarBioContent";
 import { getScholarById } from "@/sanity/lib/queries";
 
 export const revalidate = 60;

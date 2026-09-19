@@ -9,7 +9,7 @@ import {
   ShieldCheck,
   Wifi,
 } from "lucide-react";
-import { useLanguage } from "../../context/LanguageContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function DonatePage() {
   const { language } = useLanguage();
