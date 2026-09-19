@@ -1,11 +1,11 @@
 import { MetadataRoute } from "next";
 import { PrismaClient } from "@prisma/client";
-import { client } from "@/sanity/lib/client";
+import { sanityClient } from "@/sanity/lib/client";
 
 const prisma = new PrismaClient();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://igdi-school.ma"; // Change to your real domain
+  const baseUrl = "https://igdi-school.ma";
 
   // 1. Static Routes
   const staticRoutes = [
@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 3. Dynamic Routes (Scholars - Now in Sanity)
   let scholarRoutes: any[] = [];
   try {
-    const scholars = await client.fetch(`*[_type == "scholar"]{ _id }`);
+    const scholars = await sanityClient.fetch(`*[_type == "scholar"]{ _id }`);
     scholarRoutes = scholars.map((scholar: { _id: string }) => ({
       url: `${baseUrl}/scholars/${scholar._id}`,
       lastModified: new Date(),
@@ -54,8 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 4. Dynamic Routes (Blog Posts - Now in Sanity)
   let blogRoutes: any[] = [];
   try {
-    // Checking both "article" and "post" to ensure we catch your specific Sanity schema name
-    const articles = await client.fetch(
+    const articles = await sanityClient.fetch(
       `*[_type == "article" || _type == "post"]{ _id }`,
     );
     blogRoutes = articles.map((article: { _id: string }) => ({
