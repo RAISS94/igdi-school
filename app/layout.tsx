@@ -1,7 +1,4 @@
 import "./globals.css";
-// 1. Remove Navbar/Footer/LanguageProvider imports from here
-// 2. Import the new wrapper instead
-import ClientLayout from "../components/ClientLayout";
 import { Amiri, Noto_Sans_Arabic, Harmattan } from "next/font/google";
 
 const harmattan = Harmattan({
@@ -46,8 +43,34 @@ export default function RootLayout({
       className={`${harmattan.variable} ${noto.variable}`}
     >
       <body className="antialiased font-noto bg-white text-school-dark">
-        {/* Use the new ClientLayout wrapper here */}
-        <ClientLayout>{children}</ClientLayout>
+        {/* Local Business / School Structured Data for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "EducationalOrganization",
+              name: "مدرسة ايكضي العتيقة - Ecole Traditionnelle IGDI",
+              url: "https://igdi-school.ma",
+              logo: "https://igdi-school.ma/logo-igdi.jpg",
+              description:
+                "الموقع الرسمي لمدرسة ايكضي العتيقة - مدرسة دينية تقليدية تجمع بين التراث والحداثة.",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Anzi",
+                addressRegion: "Tiznit",
+                addressCountry: "MA",
+              },
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "+212-528-000000",
+                contactType: "customer service",
+              },
+            }),
+          }}
+        />
+        {/* ClientLayout is removed from here to keep the Sanity Studio layout clean */}
+        {children}
       </body>
     </html>
   );

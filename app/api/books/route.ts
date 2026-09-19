@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { getBooks } from "@/sanity/lib/queries";
 
-const prisma = new PrismaClient();
+export const revalidate = 60;
 
 export async function GET() {
-  const books = await prisma.book.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+  const books = await getBooks();
   return NextResponse.json(books);
 }

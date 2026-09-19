@@ -1,12 +1,10 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { hash } from "bcryptjs";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
-
-const prisma = new PrismaClient();
 
 // --- 1. ADMIN MANAGEMENT ---
 
@@ -79,7 +77,7 @@ export async function addArticle(formData: FormData) {
 
       try {
         await mkdir(uploadDir, { recursive: true });
-      } catch (e) {}
+      } catch (e) { }
       await writeFile(filePath, buffer);
 
       imageUrl = `/uploads/${uniqueName}`;
@@ -143,7 +141,7 @@ export async function addScholar(formData: FormData) {
 
       try {
         await mkdir(uploadDir, { recursive: true });
-      } catch (e) {}
+      } catch (e) { }
       await writeFile(filePath, buffer);
 
       imageUrl = `/uploads/${uniqueName}`;
