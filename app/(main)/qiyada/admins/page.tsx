@@ -4,8 +4,12 @@ import AdminsClient from "./AdminsClient";
 const prisma = new PrismaClient();
 
 export default async function AdminsPage() {
-  // This query will FAIL if you didn't run 'npx prisma db push'
   const admins = await prisma.admin.findMany({
+    where: {
+      role: {
+        not: "SUPER_ADMIN",
+      },
+    },
     orderBy: { createdAt: "desc" },
   });
 
