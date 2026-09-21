@@ -4,7 +4,6 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, Quote, BookOpen } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
-// Define the Interface for TypeScript safety
 interface Scholar {
   id: number;
   image: string;
@@ -16,8 +15,8 @@ interface Scholar {
   specialty_en: string;
   bio_ar: string;
   bio_en: string;
-  full_bio_ar?: string; // Optional HTML string
-  full_bio_en?: string; // Optional HTML string
+  full_bio_ar?: string;
+  full_bio_en?: string;
 }
 
 export default function ScholarBioContent({ scholar }: { scholar: Scholar }) {
@@ -31,76 +30,87 @@ export default function ScholarBioContent({ scholar }: { scholar: Scholar }) {
   };
 
   return (
-    <div className="min-h-screen bg-[#FCFCFC] font-noto">
-      {/* 1. HERO SECTION (Dark Top) */}
-      <div className="relative bg-[#0B1120] pt-32 pb-24 lg:pb-32 px-6 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-[0.05] mix-blend-overlay pointer-events-none" />
+    <div
+      className={`min-h-screen bg-[#0B1120] text-white pt-32 pb-24 font-noto relative overflow-hidden ${isAr ? "rtl" : "ltr"}`}
+      dir={isAr ? "rtl" : "ltr"}
+    >
+      {/* Background Decorative Pattern */}
+      <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-school-gold/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12 lg:gap-20">
-          {/* Image (Left/Right based on Lang) */}
-          <div
-            className={`w-full max-w-sm md:w-1/3 relative shrink-0 ${isAr ? "md:order-last" : ""}`}
-          >
-            <div className="aspect-[3/4] relative rounded-t-full overflow-hidden border-4 border-white/10 shadow-2xl">
+      <div className="max-w-5xl mx-auto px-6 relative z-10">
+        {/* Back Button */}
+        <Link
+          href="/scholars"
+          className="inline-flex items-center gap-2 text-school-gold/80 hover:text-school-gold text-xs uppercase tracking-widest font-bold mb-10 transition-colors"
+        >
+          {isAr ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
+          {t.back}
+        </Link>
+
+        {/* HERO SECTION / HEADER CARD */}
+        <div className="bg-[#1A202C]/80 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden mb-12">
+          <div className="absolute top-0 right-0 w-48 h-48 bg-school-gold/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+
+          <div className="flex flex-col md:flex-row items-center gap-10 relative z-10">
+            {/* Scholar Portrait */}
+            <div className="relative w-44 h-56 md:w-52 md:h-68 rounded-2xl overflow-hidden border-2 border-school-gold/30 shadow-2xl shrink-0 group">
               <Image
                 src={scholar.image}
                 alt={isAr ? scholar.name_ar : scholar.name_en}
                 fill
-                className="object-cover"
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
                 priority
               />
-              {/* Inner Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent opacity-40" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
             </div>
-            {/* Decorative Border behind */}
-            <div className="absolute inset-0 border border-school-gold/30 rounded-t-full translate-x-4 translate-y-4 -z-10" />
-          </div>
 
-          {/* Text Info */}
-          <div
-            className={`flex-1 text-center ${isAr ? "md:text-right" : "md:text-left"}`}
-          >
-            <Link
-              href="/scholars"
-              className="inline-flex items-center gap-2 text-school-gold/80 hover:text-school-gold text-xs uppercase tracking-widest font-bold mb-6 transition-colors"
+            {/* Scholar Metadata */}
+            <div
+              className={`flex-1 text-center ${isAr ? "md:text-right" : "md:text-left"}`}
             >
-              {isAr ? <ArrowRight size={14} /> : <ArrowLeft size={14} />}
-              {t.back}
-            </Link>
-
-            <h1 className="text-4xl md:text-6xl font-amiri text-white mb-4 leading-tight">
-              {isAr ? scholar.name_ar : scholar.name_en}
-            </h1>
-
-            <p className="text-xl text-school-gold font-amiri mb-8 opacity-90">
-              {isAr ? scholar.role_ar : scholar.role_en}
-            </p>
-
-            <div className="inline-flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-3 rounded-full">
-              <BookOpen size={18} className="text-school-gold" />
-              <span className="text-gray-300 text-sm">
-                <span className="font-bold text-white mr-2">{t.specialty}</span>
-                {isAr ? scholar.specialty_ar : scholar.specialty_en}
+              <span className="inline-block px-4 py-1.5 bg-school-gold/10 text-school-gold text-xs font-bold uppercase tracking-wider rounded-lg mb-4 border border-school-gold/20">
+                {isAr ? scholar.role_ar : scholar.role_en}
               </span>
+
+              <h1 className="text-3xl md:text-5xl font-amiri text-white mb-4 leading-tight font-bold">
+                {isAr ? scholar.name_ar : scholar.name_en}
+              </h1>
+
+              <div
+                className={`inline-flex items-center gap-3 bg-white/5 border border-white/10 px-5 py-2.5 rounded-full ${isAr ? "flex-row-reverse" : ""}`}
+              >
+                <BookOpen size={16} className="text-school-gold shrink-0" />
+                <span className="text-gray-300 text-sm">
+                  <span className="font-bold text-school-gold ml-1 mr-1">
+                    {t.specialty}
+                  </span>
+                  {isAr ? scholar.specialty_ar : scholar.specialty_en}
+                </span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 2. CONTENT SECTION (White Bottom) */}
-      <div className="max-w-4xl mx-auto px-6 py-16 -mt-10 relative z-20">
-        <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-gray-100">
-          <div className="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
-            <Quote size={24} className="text-school-gold rotate-180" />
-            <h2 className="text-2xl font-bold text-school-dark font-amiri">
+        {/* BIOGRAPHY CONTENT CARD */}
+        <div className="bg-[#1A202C]/60 backdrop-blur-md rounded-3xl shadow-2xl p-8 md:p-14 border border-white/10 relative overflow-hidden">
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-school-gold/5 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2 pointer-events-none" />
+
+          <div
+            className={`flex items-center gap-3 mb-8 pb-6 border-b border-white/10 ${isAr ? "flex-row-reverse" : ""}`}
+          >
+            <Quote size={28} className="text-school-gold rotate-180 shrink-0" />
+            <h2 className="text-2xl md:text-3xl font-bold text-school-gold font-amiri">
               {t.biography}
             </h2>
           </div>
 
-          {/* Render HTML Content safely */}
+          {/* Render HTML Content with rich typography styling */}
           <div
-            className="prose prose-lg max-w-none prose-headings:font-amiri prose-headings:text-school-dark prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-school-dark"
+            className={`prose prose-invert max-w-none font-amiri text-lg md:text-xl leading-loose text-gray-200 
+              prose-headings:text-school-gold prose-headings:font-amiri prose-headings:font-bold 
+              prose-p:mb-6 prose-strong:text-white prose-strong:font-bold
+              ${isAr ? "text-right font-amiri" : "text-left"}`}
             dangerouslySetInnerHTML={{
               __html: isAr
                 ? scholar.full_bio_ar || `<p>${scholar.bio_ar}</p>`
@@ -108,9 +118,11 @@ export default function ScholarBioContent({ scholar }: { scholar: Scholar }) {
             }}
           />
 
-          {/* Signature / End Mark */}
-          <div className="mt-12 flex justify-center opacity-30">
-            <div className="w-16 h-px bg-school-dark" />
+          {/* Elegant Divider / End Mark */}
+          <div className="mt-14 flex items-center justify-center gap-4 opacity-40">
+            <div className="w-12 h-px bg-school-gold" />
+            <div className="w-2 h-2 rounded-full bg-school-gold" />
+            <div className="w-12 h-px bg-school-gold" />
           </div>
         </div>
       </div>

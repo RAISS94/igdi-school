@@ -54,10 +54,10 @@ export default function LoginPage() {
     >
       <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
 
-      {/* Language Toggle (Top Corner) */}
+      {/* Language Toggle (Pinned explicitly to Top Left) */}
       <button
         onClick={() => setLanguage(isAr ? "en" : "ar")}
-        className={`absolute top-6 z-50 text-gray-400 hover:text-white flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 transition-all hover:bg-white/10 ${isAr ? "left-6" : "right-6"}`}
+        className="absolute top-6 left-6 z-50 text-gray-400 hover:text-white flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full border border-white/10 transition-all hover:bg-white/10"
       >
         <Globe size={16} />
         <span className="text-xs font-bold">{t.toggleLang}</span>
@@ -96,7 +96,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-school-gold/50 transition-all placeholder:text-gray-600 ltr:text-left rtl:text-right"
               dir="ltr"
-              placeholder="admin@igdi.com"
+              placeholder="hello@hello.com"
               required
             />
           </div>

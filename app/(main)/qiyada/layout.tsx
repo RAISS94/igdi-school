@@ -11,13 +11,12 @@ import {
   Menu,
   X,
   Globe,
-  Shield, // For Admins
+  Shield,
+  ExternalLink, // Added icon for Sanity
 } from "lucide-react";
 import { useState } from "react";
-// Import BOTH to fix the context error
 import { LanguageProvider, useLanguage } from "@/context/LanguageContext";
 
-// 1. The Outer Wrapper (Keeps the "Memory" alive)
 export default function AdminLayout({
   children,
 }: {
@@ -30,7 +29,6 @@ export default function AdminLayout({
   );
 }
 
-// 2. The Inner Logic
 function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { language, setLanguage } = useLanguage();
@@ -38,26 +36,11 @@ function AdminShell({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   // === SPECIAL LOGIN LAYOUT ===
-  // If we are on the login page, hide the sidebar BUT show the Language Switcher
+  // Cleaned up to remove the duplicate language button!
   if (pathname === "/qiyada/login") {
-    return (
-      <div dir={isAr ? "rtl" : "ltr"}>
-        {/* Floating Language Button */}
-        <button
-          onClick={() => setLanguage(isAr ? "en" : "ar")}
-          className="fixed top-6 left-6 z-50 flex items-center gap-2 bg-white/90 backdrop-blur shadow-md px-4 py-2 rounded-full text-gray-700 hover:text-school-gold transition-all hover:scale-105 font-bold"
-        >
-          <Globe size={18} />
-          <span>{isAr ? "English" : "العربية"}</span>
-        </button>
-
-        {/* The Login Form */}
-        {children}
-      </div>
-    );
+    return <div dir={isAr ? "rtl" : "ltr"}>{children}</div>;
   }
 
-  // === MENU ITEMS DEFINITION ===
   const menuItems = [
     {
       name: isAr ? "لوحة القيادة" : "Dashboard",
@@ -91,11 +74,8 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     },
   ];
 
-  // === PERMISSION LOGIC (PLACEHOLDER) ===
-  // In the future, you will fetch the current user here and check their 'permissions' array.
-  // For now, we return TRUE so you can see and build the pages.
   const hasPermission = (pageId: string) => {
-    return true; // <--- DEFAULT ALLOW ALL
+    return true;
   };
 
   const visibleMenuItems = menuItems.filter((item) => hasPermission(item.id));
@@ -105,6 +85,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
     logout: isAr ? "تسجيل الخروج" : "Sign Out",
     admin: isAr ? "المشرف" : "Admin",
     role: isAr ? "مسؤول النظام" : "Super User",
+    studio: isAr ? "إدارة المحتوى (Sanity)" : "Sanity Studio",
   };
 
   return (
@@ -127,7 +108,6 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             <h1 className="text-2xl font-amiri font-bold text-school-gold tracking-wider">
               {t.title}
             </h1>
-            {/* Sidebar Language Switcher */}
             <button
               onClick={() => setLanguage(isAr ? "en" : "ar")}
               className="text-gray-400 hover:text-white transition-colors"
@@ -158,7 +138,18 @@ function AdminShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          <div className="p-4 border-t border-white/10">
+          <div className="p-4 border-t border-white/10 space-y-2">
+            {/* Sanity Studio Link */}
+            <Link
+              href="/studio"
+              target="_blank"
+              className="flex items-center gap-3 px-4 py-3 w-full text-school-gold hover:bg-school-gold/10 rounded-xl transition-colors"
+            >
+              <ExternalLink size={20} className={isAr ? "ml-2" : "mr-2"} />
+              <span>{t.studio}</span>
+            </Link>
+
+            {/* Logout Button */}
             <button
               onClick={() => signOut({ callbackUrl: "/qiyada/login" })}
               className="flex items-center gap-3 px-4 py-3 w-full text-red-400 hover:bg-red-500/10 hover:text-red-300 rounded-xl transition-colors"
