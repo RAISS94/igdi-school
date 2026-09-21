@@ -8,7 +8,6 @@ const prisma = new PrismaClient();
 // --- EXISTING COURSE ACTIONS ---
 
 export async function addCourse(formData: FormData) {
-  // ... (Keep your existing addCourse code here exactly as I sent before)
   const title_ar = formData.get("title_ar") as string;
   const title_en = formData.get("title_en") as string;
   const sheikh_ar = formData.get("sheikh_ar") as string;
@@ -35,6 +34,42 @@ export async function addCourse(formData: FormData) {
       videoUrl,
       duration,
       date,
+    },
+  });
+
+  revalidatePath("/qiyada/courses");
+  revalidatePath("/courses");
+  revalidatePath("/");
+}
+
+// --- NEW EDIT COURSE ACTION ---
+export async function updateCourse(formData: FormData) {
+  const id = formData.get("id") as string;
+  const title_ar = formData.get("title_ar") as string;
+  const title_en = formData.get("title_en") as string;
+  const sheikh_ar = formData.get("sheikh_ar") as string;
+  const sheikh_en = formData.get("sheikh_en") as string;
+  const description_ar = formData.get("description_ar") as string;
+  const description_en = formData.get("description_en") as string;
+  const rawCategory = formData.get("category");
+  const category = (rawCategory as string) || "General";
+  const videoUrl = formData.get("videoUrl") as string;
+  const hours = formData.get("duration_h") || "0";
+  const mins = formData.get("duration_m") || "0";
+  const duration = `${hours}h ${mins}m`;
+
+  await prisma.course.update({
+    where: { id },
+    data: {
+      title_ar,
+      title_en,
+      sheikh_ar,
+      sheikh_en,
+      description_ar,
+      description_en,
+      category,
+      videoUrl,
+      duration,
     },
   });
 

@@ -33,7 +33,8 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
       /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
     const id = match && match[2].length === 11 ? match[2] : null;
-    return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : "";
+    // FIX: Return undefined instead of empty string to satisfy React 19
+    return id ? `https://img.youtube.com/vi/${id}/mqdefault.jpg` : undefined;
   }
 
   return (
@@ -44,10 +45,9 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
       <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-[0.03] mix-blend-overlay pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 border-b border-white/5 pb-8">
           <div>
-            <span className="text-school-gold font-bold uppercase tracking-widest text-xs mb-3 block flex items-center gap-2">
+            <span className="text-school-gold font-bold uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
               <span className="w-8 h-[1px] bg-school-gold"></span> {t.subtitle}
             </span>
             <h2 className="text-4xl md:text-5xl font-amiri text-white leading-tight">
@@ -66,7 +66,6 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
           </Link>
         </div>
 
-        {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {courses.length === 0 ? (
             <div className="col-span-3 text-center py-16 bg-[#1A202C]/50 rounded-3xl border border-white/10 border-dashed">
@@ -79,7 +78,6 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
                 key={course.id}
                 className="group relative flex flex-col bg-[#161b2a] border border-white/5 rounded-3xl overflow-hidden hover:border-school-gold/30 hover:bg-[#1c2233] transition-all duration-300 hover:-translate-y-1 shadow-2xl"
               >
-                {/* Image */}
                 <div className="relative aspect-video overflow-hidden">
                   <img
                     src={getThumbnail(course.videoUrl || "")}
@@ -88,7 +86,6 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#161b2a] to-transparent opacity-90" />
 
-                  {/* Floating Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300">
                     <div className="w-12 h-12 bg-school-gold text-school-dark rounded-full flex items-center justify-center shadow-lg transform scale-75 group-hover:scale-100 transition-transform">
                       <Play size={20} fill="currentColor" className="ml-1" />
@@ -102,9 +99,7 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-6 flex-1 flex flex-col">
-                  {/* Meta */}
                   <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
                     <span className="flex items-center gap-1.5">
                       <User size={12} className="text-school-gold" />{" "}
@@ -115,17 +110,14 @@ export default function CoursesSection({ courses }: { courses: Course[] }) {
                     </span>
                   </div>
 
-                  {/* Title */}
                   <h3 className="text-xl font-amiri text-white font-bold leading-relaxed mb-3 group-hover:text-school-gold transition-colors">
                     {isAr ? course.title_ar : course.title_en}
                   </h3>
 
-                  {/* Description (New) */}
                   <p className="text-sm text-gray-400 line-clamp-2 leading-relaxed mb-6">
                     {isAr ? course.description_ar : course.description_en}
                   </p>
 
-                  {/* Footer */}
                   <div className="mt-auto pt-4 border-t border-white/5 flex items-center justify-between text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-white transition-colors">
                     <span>{t.watch}</span>
                     <ArrowRight

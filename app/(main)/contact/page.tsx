@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { MapPin, Phone, Mail, Send, Loader2 } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { submitContactForm } from "./actions"; // We will create this file next
+import { submitContactForm } from "./actions";
 
 export default function ContactPage() {
   const { language } = useLanguage();
@@ -24,7 +24,8 @@ export default function ContactPage() {
       : "We are here to answer your inquiries",
     formTitle: isAr ? "أرسل رسالة" : "Send a Message",
     name: isAr ? "الاسم الكامل" : "Full Name",
-    email: isAr ? "البريد الإلكتروني" : "Email Address",
+    formPhone: isAr ? "رقم الهاتف" : "Phone Number",
+    email: isAr ? "البريد الإلكتروني (اختياري)" : "Email Address (Optional)",
     message: isAr ? "الرسالة" : "Message",
     send: isAr ? "إرسال" : "Send Message",
     sending: isAr ? "جاري الإرسال..." : "Sending...",
@@ -101,6 +102,19 @@ export default function ContactPage() {
                   className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-school-gold/50 focus:bg-black/40 transition-all placeholder:text-gray-600"
                 />
               </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase text-school-gold mb-2 tracking-widest">
+                  {t.formPhone}
+                </label>
+                <input
+                  name="phone"
+                  type="tel"
+                  required
+                  className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-school-gold/50 focus:bg-black/40 transition-all placeholder:text-gray-600"
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-bold uppercase text-school-gold mb-2 tracking-widest">
                   {t.email}
@@ -108,10 +122,10 @@ export default function ContactPage() {
                 <input
                   name="email"
                   type="email"
-                  required
                   className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-school-gold/50 focus:bg-black/40 transition-all placeholder:text-gray-600"
                 />
               </div>
+
               <div>
                 <label className="block text-xs font-bold uppercase text-school-gold mb-2 tracking-widest">
                   {t.message}
@@ -240,11 +254,11 @@ export default function ContactPage() {
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
                 className="w-full h-full opacity-60 hover:opacity-100 transition-opacity duration-500 grayscale hover:grayscale-0"
-                src={`https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${
+                src={
                   activeLocation === "main"
-                    ? "Anzi+Tiznit+Morocco"
-                    : "Sidi+Bibi+Morocco"
-                }`}
+                    ? "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3044.3221676962503!2d-9.267921420800395!3d29.587513363174466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xdb41c6fad000001%3A0x1f8bb8369bc007b7!2sSchool%20Traditional%20Teaching%20Islamique%20Igdi!5e1!3m2!1sen!2sma!4v1790003725104!5m2!1sen!2sma"
+                    : "https://maps.google.com/maps?q=Sidi+Bibi,+Morocco&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                }
               ></iframe>
             </div>
           </div>
