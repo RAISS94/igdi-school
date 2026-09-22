@@ -48,7 +48,6 @@ export default function Navbar() {
           {/* LOGO AREA */}
           <Link href="/" className="flex items-center gap-3">
             <div className="bg-white rounded-full w-10 h-10 md:w-12 md:h-12 flex items-center justify-center p-1">
-              {/* Ensure your logo image exists at /public/logo-igdi.jpg */}
               <Image
                 src="/logo-igdi.jpg"
                 alt="Logo"
@@ -109,47 +108,62 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* MOBILE MENU */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] flex justify-end">
-          <div
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          <div className="relative bg-white w-[85%] max-w-sm h-full shadow-2xl flex flex-col p-6">
-            <div className="flex justify-between items-center mb-8">
-              <span className="font-bold font-amiri text-2xl text-school-dark">
-                {t.schoolName}
-              </span>
-              <button
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center gap-1 text-red-500 font-bold text-sm"
-              >
-                <LogOut size={16} /> {t.closeMenu}
-              </button>
-            </div>
-            <div className="space-y-2">
-              {navLinks.map((link, i) => (
-                <Link
-                  key={i}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block p-4 rounded-xl bg-gray-50 hover:bg-school-gold/10 font-bold text-gray-800"
-                >
-                  {link.name}
-                </Link>
-              ))}
+      {/* MOBILE MENU - Always rendered, controlled via CSS transitions */}
+      <div
+        className={`fixed inset-0 z-[60] flex justify-end transition-all duration-300 ${
+          isMobileMenuOpen ? "visible" : "invisible pointer-events-none"
+        }`}
+      >
+        {/* Backdrop Fade */}
+        <div
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+            isMobileMenuOpen ? "opacity-100" : "opacity-0"
+          }`}
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+
+        {/* Drawer Slide */}
+        <div
+          className={`relative bg-white w-[85%] max-w-sm h-full shadow-2xl flex flex-col p-6 transition-transform duration-300 ease-in-out ${
+            isMobileMenuOpen
+              ? "translate-x-0"
+              : language === "ar"
+                ? "-translate-x-full"
+                : "translate-x-full"
+          }`}
+        >
+          <div className="flex justify-between items-center mb-8">
+            <span className="font-bold font-amiri text-2xl text-school-dark">
+              {t.schoolName}
+            </span>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center gap-1 text-red-500 font-bold text-sm"
+            >
+              <LogOut size={16} /> {t.closeMenu}
+            </button>
+          </div>
+          <div className="space-y-2">
+            {navLinks.map((link, i) => (
               <Link
-                href="/register"
+                key={i}
+                href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block p-4 rounded-xl bg-school-gold text-school-dark font-bold text-center mt-4"
+                className="block p-4 rounded-xl bg-gray-50 hover:bg-school-gold/10 font-bold text-gray-800 transition-colors"
               >
-                {t.register}
+                {link.name}
               </Link>
-            </div>
+            ))}
+            <Link
+              href="/register"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block p-4 rounded-xl bg-school-gold text-school-dark font-bold text-center mt-4 transition-transform hover:scale-[1.02]"
+            >
+              {t.register}
+            </Link>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 }
