@@ -185,7 +185,7 @@ export default function ContactPage() {
                     : "text-gray-400 hover:text-white"
                 }`}
               >
-                {isAr ? "مؤسسة البيان (سيدي بيبي)" : "Al-Bayan (Sidi Bibi)"}
+                {isAr ? "مؤسسة البيان (أنزي)" : "Al-Bayan (Anzi)"}
               </button>
             </div>
 
@@ -205,8 +205,8 @@ export default function ContactPage() {
                           ? "دوار إيكضي، جماعة إيكضي، دائرة أنزي، تيزنيت"
                           : "Douar Igdi, Igdi Commune, Anzi, Tiznit"
                         : isAr
-                          ? "مؤسسة البيان، سيدي بيبي، اشتوكة آيت باها"
-                          : "Al-Bayan Institution, Sidi Bibi, Chtouka Ait Baha"}
+                          ? "مؤسسة البيان مركز جماعة أنزي اقليم تيزنيت"
+                          : "Al-Bayan Institution, Anzi Center, Tiznit Province"}
                     </p>
                   </div>
                 </div>
@@ -219,11 +219,17 @@ export default function ContactPage() {
                     <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-1">
                       {t.phone}
                     </p>
-                    <p className="font-bold font-mono text-lg text-white">
-                      {activeLocation === "main"
-                        ? "+212 528 00 00 00"
-                        : "+212 528 99 99 99"}
-                    </p>
+                    {/* Phone Numbers rendered LTR so spaces and digits don't flip in Arabic */}
+                    <div className="font-bold font-mono text-lg text-white flex flex-col items-start rtl:items-end">
+                      {activeLocation === "main" ? (
+                        <span dir="ltr">06 68 09 33 86</span>
+                      ) : (
+                        <>
+                          <span dir="ltr">06 08 66 96 62</span>
+                          <span dir="ltr">06 76 26 52 83</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -236,14 +242,14 @@ export default function ContactPage() {
                       {t.emailLabel}
                     </p>
                     <p className="font-bold text-lg text-white">
-                      contact@igdi-school.ma
+                      Igdischool@gmail.com
                     </p>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* REAL MAP EMBED */}
+            {/* REAL MAP EMBED - Colorful Version */}
             <div className="flex-1 min-h-[300px] w-full bg-[#151b2b] rounded-3xl overflow-hidden relative border border-white/10 shadow-lg group">
               <iframe
                 key={activeLocation}
@@ -253,11 +259,11 @@ export default function ContactPage() {
                 loading="lazy"
                 allowFullScreen
                 referrerPolicy="no-referrer-when-downgrade"
-                className="w-full h-full opacity-60 hover:opacity-100 transition-opacity duration-500 grayscale hover:grayscale-0"
+                className="w-full h-full"
                 src={
                   activeLocation === "main"
                     ? "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3044.3221676962503!2d-9.267921420800395!3d29.587513363174466!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xdb41c6fad000001%3A0x1f8bb8369bc007b7!2sSchool%20Traditional%20Teaching%20Islamique%20Igdi!5e1!3m2!1sen!2sma!4v1790003725104!5m2!1sen!2sma"
-                    : "https://maps.google.com/maps?q=Sidi+Bibi,+Morocco&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                    : "https://maps.google.com/maps?q=مؤسسة+البيان+مركز+جماعة+أنزي+اقليم+تيزنيت&t=&z=15&ie=UTF8&iwloc=&output=embed"
                 }
               ></iframe>
             </div>

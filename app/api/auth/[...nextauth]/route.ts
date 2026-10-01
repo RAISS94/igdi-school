@@ -7,6 +7,7 @@ const handler = NextAuth({
   session: {
     strategy: "jwt",
   },
+  secret: process.env.NEXTAUTH_SECRET, // ADD THIS LINE
   // CRITICAL: This tells NextAuth where your custom login page is
   pages: {
     signIn: "/qiyada/login",
