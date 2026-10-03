@@ -23,16 +23,6 @@ export default function NewsSection({ news = [] }: { news?: any[] }) {
       className="py-24 bg-[#0B1120] relative font-noto"
       dir={isAr ? "rtl" : "ltr"}
     >
-      {/* TOP YELLOW SEPARATOR */}
-      <div className="absolute top-0 inset-x-0 flex items-center justify-center -translate-y-1/2 opacity-100 z-20">
-        <div className="w-1/3 max-w-[250px] h-[2px] bg-gradient-to-r from-transparent via-school-gold/80 to-school-gold rounded-full"></div>
-        <div className="mx-6 relative flex items-center justify-center">
-          <div className="w-4 h-4 rotate-45 border-[3px] border-school-gold bg-[#0B1120]"></div>
-          <div className="absolute w-2 h-2 rotate-45 bg-school-gold"></div>
-        </div>
-        <div className="w-1/3 max-w-[250px] h-[2px] bg-gradient-to-l from-transparent via-school-gold/80 to-school-gold rounded-full"></div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -109,16 +99,6 @@ export default function NewsSection({ news = [] }: { news?: any[] }) {
             ))
           )}
         </div>
-      </div>
-
-      {/* BOTTOM YELLOW SEPARATOR */}
-      <div className="absolute bottom-0 inset-x-0 flex items-center justify-center translate-y-1/2 opacity-100 z-20">
-        <div className="w-1/3 max-w-[250px] h-[2px] bg-gradient-to-r from-transparent via-school-gold/80 to-school-gold rounded-full"></div>
-        <div className="mx-6 relative flex items-center justify-center">
-          <div className="w-4 h-4 rotate-45 border-[3px] border-school-gold bg-[#0B1120]"></div>
-          <div className="absolute w-2 h-2 rotate-45 bg-school-gold"></div>
-        </div>
-        <div className="w-1/3 max-w-[250px] h-[2px] bg-gradient-to-l from-transparent via-school-gold/80 to-school-gold rounded-full"></div>
       </div>
     </section>
   );
