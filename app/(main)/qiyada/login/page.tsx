@@ -1,12 +1,10 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { Lock, AlertCircle, Globe } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function LoginPage() {
-  const router = useRouter();
   const { language, setLanguage } = useLanguage();
   const isAr = language === "ar";
 
@@ -43,7 +41,9 @@ export default function LoginPage() {
       setError(t.error);
       setLoading(false);
     } else {
-      router.push("/qiyada");
+      // 🚀 BULLETPROOF FIX: Use a hard redirect instead of router.push
+      // This forces the browser to apply the new auth cookie and bypasses Next.js cache
+      window.location.href = "/qiyada";
     }
   };
 
